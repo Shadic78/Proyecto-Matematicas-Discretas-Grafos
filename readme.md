@@ -13,4 +13,5 @@ se agrego que no se pueda poner un nodo muy cerca de otro.
 
 Problemas:
 - Al mover un poco rapido el mouse se deja de arrastrar el circulo.
-- Al dar clic se verifica que no se puedan poner muy cerca los nodos, pero no se verifica para arrastrar los nodos.
+- Al dar clic se verifica que no se puedan poner muy cerca los nodos, pero no se verifica para arrastrar los vertices.
+- Al arrastrar un vertice cerca de algun otro vertice relacionado, se "atraen", como un iman.
