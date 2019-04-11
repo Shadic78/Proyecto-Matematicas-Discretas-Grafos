@@ -1,5 +1,5 @@
 ### Proyecto de grafos 
-- link: link: https://shadic78.github.io/Proyecto-Matematicas-Discretas-Grafos/.
+- link: https://shadic78.github.io/Proyecto-Matematicas-Discretas-Grafos/.
 ---
 
 ## Bitacora
