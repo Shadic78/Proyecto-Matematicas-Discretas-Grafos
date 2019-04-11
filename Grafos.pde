@@ -5,6 +5,8 @@ ArrayList<Integer> verticesY = new ArrayList<Integer>();
 int widthVertices = 40;
 int tamTexto = 16;
 int count = 0;
+int posVerticeArrastrando = 0;
+boolean moviendoVertice = false;
 
 void setup() {
   size(640, 480);
@@ -16,6 +18,8 @@ void setup() {
 void draw() {
   background(0);
   imprimirVertices();
+  fill(255);
+  text("Arrastrando = " + moviendoVertice, 20, 60);
   if(count > 2) {
     stroke(#E7FF36);
     line(verticesX.get(0), verticesY.get(0), verticesX.get(1), verticesY.get(1) ); 
@@ -32,6 +36,12 @@ void mouseClicked() {
   count++;
 }
 
+void mouseReleased() {
+ if(moviendoVertice) {
+   moviendoVertice = false; 
+ }
+}
+
 void imprimirVertices() {
   // Se recorre el arrayList y se imprime un ellipse en las coordenadas que tenga esa posicion del arrayList
   for(int i = 0; i < verticesX.size(); i++){
@@ -42,10 +52,6 @@ void imprimirVertices() {
     fill(0);
     text(i + 1, verticesX.get(i), verticesY.get(i) + (tamTexto / 2));
   }
-}
-
-void imprimirAristas() {
-  
 }
 
 /* Comprueba si el mouse esta sobre una arista o no, si se esta sobre una arista entonces devuelve
@@ -69,25 +75,35 @@ int mouseSobreVertice(int num) {
 int getDistanciaEntrePuntos(int x1, int y1, int x2, int y2) {
   int distancia = 0;
   distancia = int(sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2)));
-  //println("dist: " + distancia);
+  println("dist: " + distancia);
   return distancia;
 }
 
 void moverVertice() {
-  int posicion = mouseSobreVertice(0);
-  if(posicion >= 0){
-      verticesX.set(posicion, mouseX);
-      verticesY.set(posicion, mouseY);
+  if(!moviendoVertice) {
+    posVerticeArrastrando = mouseSobreVertice(0);   
+    println("calculandopos");
+  }
+  if(posVerticeArrastrando >= 0){
+      moviendoVertice = true;
+      verticesX.set(posVerticeArrastrando, mouseX);
+      verticesY.set(posVerticeArrastrando, mouseY);
   }
 }
 
 void agregarVertices() {
-  if(!(mouseSobreVertice(widthVertices) >= 0)) {
-    verticesX.add(mouseX); 
-    verticesY.add(mouseY); 
-  }  
+  if(!moviendoVertice){
+    if(!(mouseSobreVertice(widthVertices) >= 0)) {
+      verticesX.add(mouseX); 
+      verticesY.add(mouseY); 
+    }  
+  } 
 }
 
 void agregarAristas() {
+  
+}
+
+void imprimirAristas() {
   
 }
