@@ -1,7 +1,7 @@
-##Bitacora
+## Bitacora
 ---
 
-##10/04/19
+## 10/04/19
 Empezado el proyecto, se añadio la funcionalidad de poder agregar nodos al dar clic con el mouse,
 se agrego la funcionalidad de poder arrastrar los nodos manteniendo presionando el clic izquierdo del mouse y
 se agrego que no se pueda poner un nodo muy cerca de otro.
