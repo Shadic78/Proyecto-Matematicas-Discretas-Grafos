@@ -19,7 +19,7 @@ void draw() {
   background(0);
   imprimirVertices();
   fill(255);
-  text("Arrastrando = " + moviendoVertice, 20, 60);
+  text("Arrastrando = " + moviendoVertice, 80, 20);
   if(count > 2) {
     stroke(#E7FF36);
     line(verticesX.get(0), verticesY.get(0), verticesX.get(1), verticesY.get(1) ); 
