@@ -1,3 +1,7 @@
+### Proyecto de grafos 
+- link: link: https://shadic78.github.io/Proyecto-Matematicas-Discretas-Grafos/.
+---
+
 ## Bitacora
 ---
 
@@ -10,5 +14,3 @@ se agrego que no se pueda poner un nodo muy cerca de otro.
 Problemas:
 - Al mover un poco rapido el mouse se deja de arrastrar el circulo.
 - Al dar clic se verifica que no se puedan poner muy cerca los nodos, pero no se verifica para arrastrar los nodos.
-
-link: https://shadic78.github.io/Proyecto-Matematicas-Discretas-Grafos/.
