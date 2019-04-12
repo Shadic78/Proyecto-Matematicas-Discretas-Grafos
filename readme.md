@@ -16,6 +16,7 @@ Se sigue trabajando en la interfaz grafica.
 - Se agrego una variable que sirve para saber si se esta nombrando un vertice.
 
 **Correciones:**
+
 Optimicé bastante el codigo de arrastrar el vertice, antes el codigo llamaba a mouseSobreVertice() continuamente mientras arrastrabas un vertice
 y debido a ello los vertices se "atraían" y al mover rapido el mouse se dejaba de arrastrar el vertice, ahora solo se llama a esa funcion una vez.
 - Se corrigio el problema de que al mover rapido el mouse dejabas de arrastrar el vertice.
