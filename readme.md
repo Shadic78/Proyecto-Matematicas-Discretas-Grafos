@@ -12,7 +12,7 @@ Se sigue trabajando en la interfaz grafica.
 - Se agrego que no puedas crear o mover otros vertices hasta que no hayas terminado de nombrar el vertice actual.
 - Se agrego un pequeño efecto de "parpadeo" al nombrar un vertice (no se nota mucho).
 - Se agrego un mensaje que aparece abajo de la ventana, el cual le da indicaciones al usuario.
-- se agrego una variable que sirve para saber si se esta arrastrando un vertice.
+- Se agrego una variable que sirve para saber si se esta arrastrando un vertice.
 - Se agrego una variable que sirve para saber si se esta nombrando un vertice.
 
 **Correciones:**
@@ -29,9 +29,9 @@ y debido a ello los vertices se "atraían" y al mover rapido el mouse se dejaba 
 Se empezo el proyecto, se esta trabajando la interfaz grafica.
 
 **Añadidos:**
-- se agrego la funcionalidad de poder agregar vertices al dar clic con el mouse.
-- se agrego la funcionalidad de poder arrastrar los vertices manteniendo presionando el clic izquierdo del mouse.
-- se agrego que no se pueda poner un vertice muy cerca de otro.
+- Se agrego la funcionalidad de poder agregar vertices al dar clic con el mouse.
+- Se agrego la funcionalidad de poder arrastrar los vertices manteniendo presionando el clic izquierdo del mouse.
+- Se agrego que no se pueda poner un vertice muy cerca de otro.
 
 **Problemas:**
 - **(Corregido 11/04/19)** Al mover un rapido el mouse se deja de arrastrar el vertice.
