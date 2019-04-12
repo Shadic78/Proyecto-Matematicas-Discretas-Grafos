@@ -35,7 +35,7 @@ void setup() {
   textSize(tamTexto);
   textAlign(CENTER);
   
-  mensaje = "Agrega vertices dando clic izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
+  mensaje = "Agrega vertices dando click izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
   inicializarMatriz();
 }
 
