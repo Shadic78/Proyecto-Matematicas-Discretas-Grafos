@@ -3,8 +3,8 @@
 ---
 
 ## Bitacora
-- Notas: Hay algunas cosas que funcionan correctamente en Processing 3 pero que no funcionan igual en Processing js, ya me paso
-varias veces.
+- Notas: En chrome no funciona el borrar el nombre del vertice debido a que chrome no permite detectar cuando se presiona
+la tecla "BACKSPACE".
 
 ## 12/04/19
 La interfaz grafica esta casi terminada, solo queda hacer muchas pruebas para verificar que no hayan bugs y agregar el poder
