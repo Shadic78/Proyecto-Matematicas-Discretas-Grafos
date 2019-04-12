@@ -21,6 +21,9 @@ borrar vertices y aristas.
 **Problemas:**
 - La matriz que representa al grafo tiene un limite de tamaño.
 
+**Screenshots:**
+![](Screenshot1.png)
+
 ## 11/04/19
 Se sigue trabajando en la interfaz grafica.
 
