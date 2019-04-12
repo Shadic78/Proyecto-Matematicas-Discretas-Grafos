@@ -1,3 +1,6 @@
+/*
+	Carlos Chan Gongora
+*/
 // ArrayLists que almacenan las coordenadas (x, y) de los vertices
 ArrayList<Integer> verticesX = new ArrayList<Integer>();
 ArrayList<Integer> verticesY = new ArrayList<Integer>();

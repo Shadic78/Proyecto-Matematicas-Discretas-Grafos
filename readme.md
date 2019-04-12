@@ -6,6 +6,7 @@
 
 ## 11/04/19
 Se sigue trabajando en la interfaz grafica.
+
 **Añadidos:**
 - Se agrego el poder nombrar los vertices al crearlos.
 - Se agrego que no puedas crear o mover otros vertices hasta que no hayas terminado de nombrar el vertice actual.
@@ -26,6 +27,7 @@ y debido a ello los vertices se "atraían" y al mover rapido el mouse se dejaba 
 
 ## 10/04/19
 Se empezo el proyecto, se esta trabajando la interfaz grafica.
+
 **Añadidos:**
 - se agrego la funcionalidad de poder agregar vertices al dar clic con el mouse.
 - se agrego la funcionalidad de poder arrastrar los vertices manteniendo presionando el clic izquierdo del mouse.
