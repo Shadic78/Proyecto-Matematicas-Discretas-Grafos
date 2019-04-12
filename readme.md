@@ -3,8 +3,8 @@
 ---
 
 ## Bitacora
-- Notas: En chrome no funciona el borrar el nombre del vertice debido a que chrome no permite detectar cuando se presiona
-la tecla "BACKSPACE".
+- Notas: En algunos navegadores no funciona el borrar el nombre del vertice debido a que no permiten detectar cuando se presiona
+la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si ejecutas el archivo de manera local con Processing 3.
 
 ## 12/04/19
 La interfaz grafica esta casi terminada, solo queda hacer muchas pruebas para verificar que no hayan bugs y agregar el poder
