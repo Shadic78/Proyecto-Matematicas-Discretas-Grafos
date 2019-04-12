@@ -9,7 +9,7 @@ La interfaz grafica esta casi terminada, solo queda hacer muchas pruebas para ve
 borrar vertices y aristas.
 
 **Añadidos:**
-- Se agrego una "matriz de adyacencia", la cual representa el grafo.
+- Se agrego una "matriz de adyacencia", la cual representa al grafo (no dirigido).
 - Se agrego el poder agregar vertices al dar clic derecho.
 
 **Correciones:**
