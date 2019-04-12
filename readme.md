@@ -5,19 +5,33 @@
 ## Bitacora
 
 ## 11/04/19
-Optimicé bastante el codigo de arrastrar el circulo, antes el codigo llamaba a mouseSobreVertice() continuamente mientras arrastrabas un circulo
-y debido a ello los circulos se "atraían" y al mover rapido el mouse se dejaba de arrastrar el circulo, ahora solo se llama a esa funcion una vez.
-- Corregi dos problemas: El que al mover rapido el mouse dejas de arrastrar el circulo y el problema de que al arrastrar un circulo
-y acercarte a otro circulo se "atraen" como imanes.
-- Agregue una variable que sirve para saber si se esta arrastrando un circulo.
+Se sigue trabajando en la interfaz grafica.
+**Añadidos:**
+- Se agrego el poder nombrar los vertices al crearlos.
+- Se agrego que no puedas crear o mover otros vertices hasta que no hayas terminado de nombrar el vertice actual.
+- Se agrego un pequeño efecto de "parpadeo" al nombrar un vertice (no se nota mucho).
+- Se agrego un mensaje que aparece abajo de la ventana, el cual le da indicaciones al usuario.
+- se agrego una variable que sirve para saber si se esta arrastrando un vertice.
+- Se agrego una variable que sirve para saber si se esta nombrando un vertice.
+
+**Correciones:**
+Optimicé bastante el codigo de arrastrar el vertice, antes el codigo llamaba a mouseSobreVertice() continuamente mientras arrastrabas un vertice
+y debido a ello los vertices se "atraían" y al mover rapido el mouse se dejaba de arrastrar el vertice, ahora solo se llama a esa funcion una vez.
+- Se corrigio el problema de que al mover rapido el mouse dejabas de arrastrar el vertice.
+- Se corrigio el problema de que al arrastrar un vertice y acercarte a otro vertice se "atraen", como imanes.
+
+
+**Problemas:**
+- El nombrado del vertice no tiene limite de tamaño.
 
 ## 10/04/19
-Empezado el proyecto, se añadio la funcionalidad de poder agregar nodos al dar clic con el mouse,
-se agrego la funcionalidad de poder arrastrar los nodos manteniendo presionando el clic izquierdo del mouse y
-se agrego que no se pueda poner un nodo muy cerca de otro.
-(Todo lo anterior es solo la interfaz grafica)
+Se empezo el proyecto, se esta trabajando la interfaz grafica.
+**Añadidos:**
+- se agrego la funcionalidad de poder agregar vertices al dar clic con el mouse.
+- se agrego la funcionalidad de poder arrastrar los vertices manteniendo presionando el clic izquierdo del mouse.
+- se agrego que no se pueda poner un vertice muy cerca de otro.
 
-Problemas:
-- **(Corregido 11/04/19)** Al mover un poco rapido el mouse se deja de arrastrar el circulo.
-- Al dar clic se verifica que no se puedan poner muy cerca los nodos, pero no se verifica lo mismo para arrastrar los vertices.
+**Problemas:**
+- **(Corregido 11/04/19)** Al mover un rapido el mouse se deja de arrastrar el vertice.
+- Al dar clic se verifica que no se puedan poner muy cerca los vertices, pero no se verifica lo mismo para arrastrar los vertices.
 - **(Corregido 11/04/19)** Al arrastrar un vertice cerca de algun otro vertice se "atraen", como un iman.
