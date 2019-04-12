@@ -112,7 +112,7 @@ int mouseSobreVertice(int num) {
 int getDistanciaEntrePuntos(int x1, int y1, int x2, int y2) {
   int distancia = 0;
   distancia = int(sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2)));
-  println("dist: " + distancia);
+  //println("dist: " + distancia);
   return distancia;
 }
 
@@ -163,7 +163,7 @@ void nombrarVertice() {
       mensaje = "Agrega vertices dando clic con el mouse\nPuedes arrastrar los vertices";
     }
     else if((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9')) {
-      nombreVertice += key; 
+      nombreVertice += str(key); 
       nombresVertices.set(nombresVertices.size() - 1, nombreVertice);
       //println(nombreVertice);
     }
