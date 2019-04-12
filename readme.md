@@ -3,6 +3,8 @@
 ---
 
 ## Bitacora
+- Notas: Hay algunas cosas que funcionan correctamente en Processing 3 pero que no funcionan igual en Processing js, ya me paso
+varias veces.
 
 ## 12/04/19
 La interfaz grafica esta casi terminada, solo queda hacer muchas pruebas para verificar que no hayan bugs y agregar el poder

@@ -186,7 +186,7 @@ void nombrarVertice() {
       mensaje = "Agrega vertices dando clic con el mouse\nPuedes arrastrar los vertices";
     }
     // Borrar
-    else if(keyCode == BACKSPACE) {
+    else if(keyCode == BACKSPACE || keyCode == DELETE) {
       if(nombreVertice.length() > 0) {
         nombreVertice = nombreVertice.substring(0, nombreVertice.length() - 1);
         nombresVertices.set(nombresVertices.size() - 1, nombreVertice);
@@ -194,6 +194,9 @@ void nombrarVertice() {
     }
     // Escribir el nombre
     else if((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9')) {
+      if(nombreVertice == "Nombre") {
+        nombreVertice = ""; 
+      }
       nombreVertice += str(key); 
       nombresVertices.set(nombresVertices.size() - 1, nombreVertice);
       //println(nombreVertice);
