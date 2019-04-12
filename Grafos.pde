@@ -163,8 +163,8 @@ void agregarVertices() {
       verticesX.add(mouseX); 
       verticesY.add(mouseY); 
       
-      nombreVertice = "Nombre";
-      nombresVertices.add(nombreVertice);
+      nombreVertice = " ";
+      nombresVertices.add("Nombre");
       nombrandoVertice = true;
       
       mensaje = "Ponle un nombre al vertice, acepta con ENTER";
@@ -183,10 +183,10 @@ void nombrarVertice() {
     if(keyCode == ENTER) {
       nombrandoVertice = false;
       nombreVertice = "";
-      mensaje = "Agrega vertices dando clic con el mouse\nPuedes arrastrar los vertices";
+      mensaje = "Agrega vertices dando clic izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
     }
     // Borrar
-    else if(keyCode == BACKSPACE || keyCode == DELETE) {
+    else if(keyCode == BACKSPACE || keyCode == 8) {
       if(nombreVertice.length() > 0) {
         nombreVertice = nombreVertice.substring(0, nombreVertice.length() - 1);
         nombresVertices.set(nombresVertices.size() - 1, nombreVertice);
