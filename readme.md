@@ -13,7 +13,7 @@ borrar vertices y aristas.
 - Se agrego el poder agregar vertices al dar clic derecho.
 
 **Correciones:**
-Ninguna
+- Puedes borrar el nombre del vertice que estes escribiendo.
 
 
 **Problemas:**
