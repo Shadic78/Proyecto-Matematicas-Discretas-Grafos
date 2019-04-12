@@ -1,10 +1,20 @@
 /*
 	Carlos Chan Gongora
 */
+/*
+  ArrayLists para la parte grafica de los grafos
+*/
 // ArrayLists que almacenan las coordenadas (x, y) de los vertices
 ArrayList<Integer> verticesX = new ArrayList<Integer>();
 ArrayList<Integer> verticesY = new ArrayList<Integer>();
+// ArrayList que almacena los nombres de los vertices
 ArrayList<String> nombresVertices = new ArrayList<String>();
+
+int[][] matrizAdyacencia = new int[50][50];
+
+/*{{0, 1, 0}, 
+{1, 0, 1}, 
+{0, 1, 0}};*/
 
 int widthVertices = 40;
 int tamTexto = 16;
@@ -15,22 +25,29 @@ boolean moviendoVertice = false;
 String nombreVertice = "";
 String mensaje = "";
 
+boolean agregandoArista = false;
+int posVertice1 = -1;
+int posVertice2 = -1;
+
 void setup() {
   size(640, 480);
   frameRate(60);
   textSize(tamTexto);
   textAlign(CENTER);
   
-  mensaje = "Agrega vertices dando clic con el mouse\nPuedes arrastrar los vertices";
+  mensaje = "Agrega vertices dando clic izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
+  inicializarMatriz();
 }
 
 void draw() {
   background(0);
+  imprimirAristas();
   imprimirVertices();
   imprimirNombresVertices();
   imprimirMensajes();
   fill(255);
-  text("Arrastrando = " + moviendoVertice + "    Nombrando = " + nombrandoVertice, width/2, 20);
+  text("Arrastrando = " + moviendoVertice + "    Nombrando = " + nombrandoVertice, width / 2, 20);
+  text("AgregandoArista = " + agregandoArista, width / 2, 35);
 }
 
 void mouseDragged() {
@@ -40,6 +57,7 @@ void mouseDragged() {
 void mouseClicked() {
   //mouseSobreArista();
   agregarVertices();
+  agregarAristas();
   count++;
 }
 
@@ -117,14 +135,17 @@ int getDistanciaEntrePuntos(int x1, int y1, int x2, int y2) {
 }
 
 /*
-  Hace que un vertice siga las coordenadas del mouse, si no se esta nombrando un vertice
+  Hace que un vertice siga las coordenadas del mouse, si no se esta nombrando un vertice y si no
+  se esta agregando una arista.
 */
 void moverVertice() {
-  if(!moviendoVertice && !nombrandoVertice) {
+  if(!moviendoVertice && !nombrandoVertice && !agregandoArista) {
+    // Obtiene la posicion del vertice al que hiciste click
     posVerticeArrastrando = mouseSobreVertice(0);   
-    //println("calculandopos");
   }
-  if(posVerticeArrastrando >= 0 && !nombrandoVertice){
+  // Este if se activa si posVerticeArrastrando es mayor o igual a cero, es decir
+  // si hiciste click sobre un vertice.
+  if(posVerticeArrastrando >= 0 && !nombrandoVertice && !agregandoArista){
       moviendoVertice = true;
       verticesX.set(posVerticeArrastrando, mouseX);
       verticesY.set(posVerticeArrastrando, mouseY);
@@ -132,12 +153,12 @@ void moverVertice() {
 }
 
 /*
-  Agrega un nuevo vertice, siempre y cuando no se este arrastrando otro vertice 
-  y que no se este encima de otro vertice y que no se este nombrando un vertice.
-  Al activar nombrandoVertice esta funcion se "bloquea", al igual que la de moverVertice()
+  Agrega un nuevo vertice, siempre y cuando no se este moviendo otro vertice 
+  y que no se este encima de otro vertice y que no se este nombrando un vertice y que no se este agregando una arista.
+  Al activar nombrandoVertice o agregandoArista o moviendoVertice esta funcion se "bloquea", al igual que la de moverVertice()
 */
 void agregarVertices() {
-  if(!moviendoVertice && !nombrandoVertice){
+  if(!moviendoVertice && !nombrandoVertice && !agregandoArista && mouseButton == LEFT){
     if(!(mouseSobreVertice(widthVertices) >= 0)) {
       verticesX.add(mouseX); 
       verticesY.add(mouseY); 
@@ -173,16 +194,73 @@ void nombrarVertice() {
 void imprimirMensajes() {
   if(mensaje.length() > 0) {
     fill(#EFFC3B); 
-    text(mensaje, width / 2, height - (tamTexto * 3)); 
+    text(mensaje, width / 2, height - (tamTexto * 4)); 
   }
 }
-/*----------------------
-  Pendiente
+
+/*
+  Rellena la matriz de ceros
 */
-void agregarAristas() {
-  
+void inicializarMatriz() {
+  for(int i = 0; i < matrizAdyacencia.length; i++) {
+    for(int j = 0; j < matrizAdyacencia.length; j++) {
+      matrizAdyacencia[i][j] = 0;  
+    }
+  }
 }
 
+/*
+  Esta funcion agrega aristas.
+  Primero checa que si se apreto el click derecho del mouse y si no se esta agregando aristas y si hay mas de un vertice,
+  de ser verdad verifica si hiciste click en algun vertice, de ser verdad guarda la posicion
+  del vertice al que clickeaste y activa agregandoArista.
+  Segundo, si se esta agregandoArista entonces se verifica si se hizo click en algun vertice y
+  si el vertice al que clickeaste es distinto al que ya habias clickeado, de ser verdad entonces
+  guarda la posicion del vertice que clickeaste y a la matriz de adyacencia en las posiciones
+  de los vertices que clickeaste le asigna un 1, representando que esos vertices estan conectados,
+  posterior reinicializa las variables de las posiciones de los vertices y desactiva agregandoArista.
+*/
+void agregarAristas() {
+  if(mouseButton == RIGHT && !agregandoArista && verticesX.size() > 1) {
+    int pos = mouseSobreVertice(0);
+    if(pos >= 0 && posVertice1 < 0) {
+       agregandoArista = true;
+       posVertice1 = pos;
+       mensaje = "Da click en otro vertice para unirlos con una arista";
+    }
+  }
+  else if(mouseButton == RIGHT && agregandoArista) {
+    int pos = mouseSobreVertice(0);
+    if(pos >= 0 && pos != posVertice1) {
+      posVertice2 = pos;
+      matrizAdyacencia[posVertice1][posVertice2] = 1;
+      matrizAdyacencia[posVertice2][posVertice1] = 1;
+      println("Agregado arista: ");
+      println("[" + posVertice1 + "][" + posVertice2 + "]" + " = " + matrizAdyacencia[posVertice1][posVertice2]);
+      println("[" + posVertice2 + "][" + posVertice1 + "]" + " = " + matrizAdyacencia[posVertice2][posVertice1] + "\n");
+      posVertice1 = -1;
+      posVertice2 = -1;
+      agregandoArista = false; 
+      mensaje = "Agrega vertices dando clic izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
+    }
+  }
+}
+
+/*
+  Imprime las aristas.
+  Si hay mas de un vertice entonces se recorre la matriz de adyacencia y si en la casilla
+  hay un 1 entonces se imprime una linea desde el vertice que esta en la fila (i) hasta el
+  vertice que esta en la columna (j).
+*/
 void imprimirAristas() {
-  
+  if(verticesX.size() > 1){
+    for(int i = 0; i < matrizAdyacencia.length; i++){
+      for(int j = 0; j < matrizAdyacencia.length; j++){
+        if(matrizAdyacencia[i][j] == 1){
+          stroke(#F7FF27);
+          line(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));
+        }
+      }
+    }
+  }
 }
