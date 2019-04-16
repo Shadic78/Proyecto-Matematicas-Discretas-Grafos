@@ -10,23 +10,22 @@ ArrayList<Integer> verticesY = new ArrayList<Integer>();
 // ArrayList que almacena los nombres de los vertices
 ArrayList<String> nombresVertices = new ArrayList<String>();
 
+// Matriz que representa al grafo
 int[][] matrizAdyacencia = new int[50][50];
-
-/*{{0, 1, 0}, 
-{1, 0, 1}, 
-{0, 1, 0}};*/
 
 int widthVertices = 40;
 int tamTexto = 16;
-int count = 0;
 int posVerticeArrastrando = 0;
 boolean nombrandoVertice = false;
 boolean moviendoVertice = false;
 String nombreVertice = "";
 String mensaje = "";
 
+// Variables para agregar aristas
 boolean agregandoArista = false;
+// Guarda la posicion en los arrayList del primer vertice al que le das click
 int posVertice1 = -1;
+// Guarda la posicion en los arrayList del segundo vertice al que le das click
 int posVertice2 = -1;
 
 void setup() {
@@ -55,10 +54,8 @@ void mouseDragged() {
 }
 
 void mouseClicked() {
-  //mouseSobreArista();
   agregarVertices();
   agregarAristas();
-  count++;
 }
 
 void mouseReleased() {
@@ -267,11 +264,18 @@ void agregarAristas() {
 */
 void imprimirAristas() {
   if(verticesX.size() > 1){
-    for(int i = 0; i < matrizAdyacencia.length; i++){
-      for(int j = 0; j < matrizAdyacencia.length; j++){
+    // Se recorre hasta verticesX,size() debido a que es el numero de vertices que hay
+    for(int i = 0; i < verticesX.size(); i++){
+      for(int j = 0; j < verticesX.size(); j++){
         if(matrizAdyacencia[i][j] == 1){
           stroke(#F7FF27);
           line(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));
+        }
+        if(agregandoArista) {
+        // Si se esta agregando una arista se dibuja una linea desde el vertice al que hiciste click
+        // hasta las coordenadas del mouse
+          stroke(#F7FF27);
+          line(verticesX.get(posVertice1), verticesY.get(posVertice1), mouseX, mouseY);
         }
       }
     }
