@@ -6,9 +6,24 @@
 - Notas: En algunos navegadores no funciona el borrar el nombre del vertice debido a que no permiten detectar cuando se presiona
 la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si ejecutas el archivo de manera local con Processing 3.
 
+## 17/04/19
+
+**Añadidos:**
+- Se agrego que los grafos sean dirigidos.
+- Se agrego una función que permite dibujar flechas.
+
+**Correciones:**
+- Ninguna.
+
+**Problemas:**
+- Ninguno.
+
+**Screenshots:**
+
+![](img/Screenshot2.png)
+
 ## 12/04/19
-La interfaz grafica esta casi terminada, solo queda hacer muchas pruebas para verificar que no hayan bugs y agregar el poder
-borrar vertices y aristas.
+La interfaz grafica esta casi terminada, falta agregar el poder borrar vertices y aristas.
 
 **Añadidos:**
 - Se agrego una "matriz de adyacencia", la cual representa al grafo (no dirigido).
@@ -23,7 +38,7 @@ borrar vertices y aristas.
 
 **Screenshots:**
 
-![](Screenshot1.png)
+![](img/Screenshot1.png)
 
 ## 11/04/19
 Se sigue trabajando en la interfaz grafica.

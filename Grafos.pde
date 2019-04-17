@@ -19,7 +19,7 @@ int posVerticeArrastrando = 0;
 boolean nombrandoVertice = false;
 boolean moviendoVertice = false;
 String nombreVertice = "";
-String mensaje = "";
+String mensaje = " ";
 
 // Variables para agregar aristas
 boolean agregandoArista = false;
@@ -34,8 +34,7 @@ void setup() {
   textSize(tamTexto);
   textAlign(CENTER);
   
-  mensaje = "Agrega vertices dando click izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
-  inicializarMatriz();
+  inicializarMatriz(matrizAdyacencia);
 }
 
 void draw() {
@@ -44,6 +43,7 @@ void draw() {
   imprimirVertices();
   imprimirNombresVertices();
   imprimirMensajes();
+
   fill(255);
   text("Arrastrando = " + moviendoVertice + "    Nombrando = " + nombrandoVertice, width / 2, 20);
   text("AgregandoArista = " + agregandoArista, width / 2, 35);
@@ -103,7 +103,7 @@ void imprimirNombresVertices() {
 }
 
 /* 
-   Comprueba si el mouse esta sobre una arista o no, si se esta sobre una arista entonces devuelve
+   Comprueba si el mouse esta sobre un vertice o no, si se esta sobre una arista entonces devuelve
    la posicion de la arista, el parametro es para aumentar la distancia,
    sirve para que no puedas poner los vertices muy pegados
 */
@@ -113,7 +113,6 @@ int mouseSobreVertice(int num) {
   for(int i = 0; i < verticesX.size(); i++) {
     distancia = getDistanciaEntrePuntos(mouseX, mouseY, verticesX.get(i), verticesY.get(i)) - num;
     if(distancia < (widthVertices / 2)) {
-      //println("Encima de: " + (i+1)); 
       pos = i;
       break;
     }
@@ -127,7 +126,6 @@ int mouseSobreVertice(int num) {
 int getDistanciaEntrePuntos(int x1, int y1, int x2, int y2) {
   int distancia = 0;
   distancia = int(sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2)));
-  //println("dist: " + distancia);
   return distancia;
 }
 
@@ -162,9 +160,7 @@ void agregarVertices() {
       
       nombreVertice = " ";
       nombresVertices.add("Nombre");
-      nombrandoVertice = true;
-      
-      mensaje = "Ponle un nombre al vertice, acepta con ENTER";
+      nombrandoVertice = true;      
     }  
   } 
 }
@@ -180,7 +176,6 @@ void nombrarVertice() {
     if(keyCode == ENTER) {
       nombrandoVertice = false;
       nombreVertice = "";
-      mensaje = "Agrega vertices dando clic izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
     }
     // Borrar
     else if(keyCode == BACKSPACE || keyCode == 8) {
@@ -196,25 +191,31 @@ void nombrarVertice() {
       }
       nombreVertice += str(key); 
       nombresVertices.set(nombresVertices.size() - 1, nombreVertice);
-      //println(nombreVertice);
     }
   }
 }
 
 void imprimirMensajes() {
-  if(mensaje.length() > 0) {
-    fill(#EFFC3B); 
-    text(mensaje, width / 2, height - (tamTexto * 4)); 
+  fill(#EFFC3B); 
+  if(!nombrandoVertice && !agregandoArista) {
+    mensaje = "Agrega vertices dando clic izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
   }
+  else if(nombrandoVertice) {
+    mensaje = "Ponle un nombre al vertice, acepta con ENTER";      
+  }
+  else if(agregandoArista) {
+    mensaje = "Da click en otro vertice para unirlos con una arista";      
+  }
+  text(mensaje, width / 2, height - (tamTexto * 4)); 
 }
 
 /*
   Rellena la matriz de ceros
 */
-void inicializarMatriz() {
-  for(int i = 0; i < matrizAdyacencia.length; i++) {
-    for(int j = 0; j < matrizAdyacencia.length; j++) {
-      matrizAdyacencia[i][j] = 0;  
+void inicializarMatriz(int matriz[][]) {
+  for(int i = 0; i < matriz.length; i++) {
+    for(int j = 0; j < matriz.length; j++) {
+      matriz[i][j] = 0;  
     }
   }
 }
@@ -236,7 +237,7 @@ void agregarAristas() {
     if(pos >= 0 && posVertice1 < 0) {
        agregandoArista = true;
        posVertice1 = pos;
-       mensaje = "Da click en otro vertice para unirlos con una arista";
+       //mensaje = "Da click en otro vertice para unirlos con una arista";
     }
   }
   else if(mouseButton == RIGHT && agregandoArista) {
@@ -244,14 +245,13 @@ void agregarAristas() {
     if(pos >= 0 && pos != posVertice1) {
       posVertice2 = pos;
       matrizAdyacencia[posVertice1][posVertice2] = 1;
-      matrizAdyacencia[posVertice2][posVertice1] = 1;
+      //matrizAdyacencia[posVertice2][posVertice1] = 1;
       println("Agregado arista: ");
       println("[" + posVertice1 + "][" + posVertice2 + "]" + " = " + matrizAdyacencia[posVertice1][posVertice2]);
-      println("[" + posVertice2 + "][" + posVertice1 + "]" + " = " + matrizAdyacencia[posVertice2][posVertice1] + "\n");
+      //println("[" + posVertice2 + "][" + posVertice1 + "]" + " = " + matrizAdyacencia[posVertice2][posVertice1] + "\n");
       posVertice1 = -1;
       posVertice2 = -1;
       agregandoArista = false; 
-      mensaje = "Agrega vertices dando clic izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
     }
   }
 }
@@ -269,7 +269,9 @@ void imprimirAristas() {
       for(int j = 0; j < verticesX.size(); j++){
         if(matrizAdyacencia[i][j] == 1){
           stroke(#F7FF27);
-          line(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));
+          fill(#F7FF27);
+          // Se dibuja la flecha solo con el segundo triangulo
+          dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 0, 5);
         }
         if(agregandoArista) {
         // Si se esta agregando una arista se dibuja una linea desde el vertice al que hiciste click
@@ -280,4 +282,42 @@ void imprimirAristas() {
       }
     }
   }
+}
+
+/*
+  Dibuja una flecha.
+  Sus parametros son las coordenadas de los 2 puntos y el tamaño de la flecha inicial y final
+*/ 
+void dibujarFlecha(float x0, float y0, float x1, float y1, float tamTrianguloInicio, float tamTrianguloFinal) {
+  
+  // Aumenta el tamaño del triangulo de la flecha
+  float aumentarTam = 1;
+  
+  // Dibujar la linea entre los dos puntos
+  strokeCap(SQUARE);
+  line(x0, y0, x1, y1);
+  
+  // Obtener el angulo entre los puntos
+  float angulo = atan2(y1 - y0, x1 - x0);
+  
+  /* Dibujar los triangulos */
+  // Originalmente en vez de -(widthVertices / 2) va 0, el -(widthVertices / 2) es para el desface.
+  
+  // triangulo del inicio
+  pushMatrix();
+  translate(x0, y0);
+  rotate(angulo + PI);
+  triangle(-tamTrianguloInicio * aumentarTam - (widthVertices / 2), -tamTrianguloInicio, 
+           -tamTrianguloInicio * aumentarTam - (widthVertices / 2), tamTrianguloInicio, 
+           -(widthVertices / 2), 0);
+  popMatrix();
+    
+  // triangulo del final
+  pushMatrix();
+  translate(x1, y1);
+  rotate(angulo);
+  triangle(-tamTrianguloFinal * aumentarTam - (widthVertices / 2), -tamTrianguloFinal, 
+           -tamTrianguloFinal * aumentarTam - (widthVertices / 2), tamTrianguloFinal, 
+           -(widthVertices / 2), 0);
+  popMatrix();
 }
