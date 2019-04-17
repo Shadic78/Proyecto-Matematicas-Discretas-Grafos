@@ -13,10 +13,10 @@ la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si eje
 - Se agrego una función que permite dibujar flechas.
 
 **Correciones:**
-- Ninguna.
+- Nada.
 
 **Problemas:**
-- Ninguno.
+- Nada.
 
 **Screenshots:**
 
