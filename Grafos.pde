@@ -21,15 +21,16 @@ boolean moviendoVertice = false;
 String nombreVertice = "";
 String mensaje = " ";
 
-// Variables para agregar aristas
+// Variables para las aristas
 boolean agregandoArista = false;
+boolean borrandoArista = false;
 // Guarda la posicion en los arrayList del primer vertice al que le das click
 int posVertice1 = -1;
 // Guarda la posicion en los arrayList del segundo vertice al que le das click
 int posVertice2 = -1;
 
 void setup() {
-  size(640, 480);
+  size(1024, 576);
   frameRate(60);
   textSize(tamTexto);
   textAlign(CENTER);
@@ -45,8 +46,8 @@ void draw() {
   imprimirMensajes();
 
   fill(255);
-  text("Arrastrando = " + moviendoVertice + "    Nombrando = " + nombrandoVertice, width / 2, 20);
-  text("AgregandoArista = " + agregandoArista, width / 2, 35);
+  //text("Arrastrando = " + moviendoVertice + "    Nombrando = " + nombrandoVertice, width / 2, 20);
+  //text("AgregandoArista = " + agregandoArista, width / 2, 35);
 }
 
 void mouseDragged() {
@@ -56,6 +57,7 @@ void mouseDragged() {
 void mouseClicked() {
   agregarVertices();
   agregarAristas();
+  eliminarAristas(matrizAdyacencia);
 }
 
 void mouseReleased() {
@@ -68,6 +70,9 @@ void keyPressed() {
   nombrarVertice(); 
 }
 
+/************************************
+              VERTICES
+************************************/
 /*
   Imprime los vertices
 */
@@ -98,14 +103,16 @@ void imprimirNombresVertices() {
       fill(255);
     }
     // Se imprime el nombre
+    textSize(tamTexto);
+    textAlign(CENTER);
     text(nombresVertices.get(i), verticesX.get(i), verticesY.get(i) + (tamTexto / 2));
   }
 }
 
 /* 
    Comprueba si el mouse esta sobre un vertice o no, si se esta sobre una arista entonces devuelve
-   la posicion de la arista, el parametro es para aumentar la distancia,
-   sirve para que no puedas poner los vertices muy pegados
+   la posicion de la arista, el parametro es para aumentar artificialmente la distancia, lo uso
+   para que no puedas poner los vertices muy pegados al crearlos.
 */
 int mouseSobreVertice(int num) {
   int distancia = 0;
@@ -134,13 +141,13 @@ int getDistanciaEntrePuntos(int x1, int y1, int x2, int y2) {
   se esta agregando una arista.
 */
 void moverVertice() {
-  if(!moviendoVertice && !nombrandoVertice && !agregandoArista) {
+  if(!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista) {
     // Obtiene la posicion del vertice al que hiciste click
     posVerticeArrastrando = mouseSobreVertice(0);   
   }
   // Este if se activa si posVerticeArrastrando es mayor o igual a cero, es decir
   // si hiciste click sobre un vertice.
-  if(posVerticeArrastrando >= 0 && !nombrandoVertice && !agregandoArista){
+  if(posVerticeArrastrando >= 0 && !nombrandoVertice && !agregandoArista && !borrandoArista){
       moviendoVertice = true;
       verticesX.set(posVerticeArrastrando, mouseX);
       verticesY.set(posVerticeArrastrando, mouseY);
@@ -153,7 +160,7 @@ void moverVertice() {
   Al activar nombrandoVertice o agregandoArista o moviendoVertice esta funcion se "bloquea", al igual que la de moverVertice()
 */
 void agregarVertices() {
-  if(!moviendoVertice && !nombrandoVertice && !agregandoArista && mouseButton == LEFT){
+  if(!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista && mouseButton == LEFT && !keyPressed){
     if(!(mouseSobreVertice(widthVertices) >= 0)) {
       verticesX.add(mouseX); 
       verticesY.add(mouseY); 
@@ -195,31 +202,9 @@ void nombrarVertice() {
   }
 }
 
-void imprimirMensajes() {
-  fill(#EFFC3B); 
-  if(!nombrandoVertice && !agregandoArista) {
-    mensaje = "Agrega vertices dando clic izquierdo con el mouse\nPuedes arrastrar los vertices\nPuedes agregar aristas dando click derecho";
-  }
-  else if(nombrandoVertice) {
-    mensaje = "Ponle un nombre al vertice, acepta con ENTER";      
-  }
-  else if(agregandoArista) {
-    mensaje = "Da click en otro vertice para unirlos con una arista";      
-  }
-  text(mensaje, width / 2, height - (tamTexto * 4)); 
-}
-
-/*
-  Rellena la matriz de ceros
-*/
-void inicializarMatriz(int matriz[][]) {
-  for(int i = 0; i < matriz.length; i++) {
-    for(int j = 0; j < matriz.length; j++) {
-      matriz[i][j] = 0;  
-    }
-  }
-}
-
+/************************************
+              ARISTAS
+************************************/
 /*
   Esta funcion agrega aristas.
   Primero checa que si se apreto el click derecho del mouse y si no se esta agregando aristas y si hay mas de un vertice,
@@ -232,7 +217,7 @@ void inicializarMatriz(int matriz[][]) {
   posterior reinicializa las variables de las posiciones de los vertices y desactiva agregandoArista.
 */
 void agregarAristas() {
-  if(mouseButton == RIGHT && !agregandoArista && verticesX.size() > 1) {
+  if(mouseButton == RIGHT && !keyPressed && !agregandoArista && !borrandoArista && verticesX.size() > 1) {
     int pos = mouseSobreVertice(0);
     if(pos >= 0 && posVertice1 < 0) {
        agregandoArista = true;
@@ -320,4 +305,70 @@ void dibujarFlecha(float x0, float y0, float x1, float y1, float tamTrianguloIni
            -tamTrianguloFinal * aumentarTam - (widthVertices / 2), tamTrianguloFinal, 
            -(widthVertices / 2), 0);
   popMatrix();
+}
+
+/*
+  Eliminar arista.
+  Si se esta presionando shift y se dio click derecho se guarda la posicion del vertice al que se le hizo click
+  y se activa borrandoArista, cuando le das click derecho a otro vertice se guarda su posicion
+  y se cambia el valor que haya en esa casilla de la matriz por un 0, de esa manera se elimina la arista.
+*/
+void eliminarAristas(int matriz[][]) {
+  int vertice = 0;
+  if(!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice) {
+    if(keyPressed && keyCode == SHIFT && mouseButton == RIGHT) {
+      vertice = mouseSobreVertice(0); 
+      if(vertice >= 0) {
+        println("Click y shift");
+        posVertice1 = vertice;
+        borrandoArista = true;
+      } 
+    }
+  }
+  else if(mouseButton == RIGHT && borrandoArista) {
+    vertice = mouseSobreVertice(0);
+    if(vertice >= 0 && vertice != posVertice1) {
+      posVertice2 = vertice;
+      matriz[posVertice1][posVertice2] = 0;
+      println("Eliminado arista: ");
+      println("[" + posVertice1 + "][" + posVertice2 + "]" + " = " + matriz[posVertice1][posVertice2]);
+      posVertice1 = -1;
+      posVertice2 = -1;
+      borrandoArista = false; 
+    } 
+  }
+}
+/************************************
+              OTROS
+************************************/
+
+// Mensajes que ayudan al usuario
+void imprimirMensajes() {
+  fill(#EFFC3B); 
+  if(!nombrandoVertice && !agregandoArista && !borrandoArista) {
+    mensaje = "- Agrega vertices dando clic izquierdo con el mouse.\n- Puedes mover de lugar los vertices.\n";
+    mensaje += "- Puedes agregar aristas dando click derecho a dos vertices.\n- Puedes borrar aristas manteniendo pulsado SHIFT y dando click derecho a dos vertices.";
+  }
+  else if(nombrandoVertice) {
+    mensaje = "Ponle un nombre al vertice, acepta con ENTER";      
+  }
+  else if(agregandoArista) {
+    mensaje = "Da click en otro vertice para unirlos con una arista";      
+  }
+  else if(borrandoArista) {
+    mensaje = "Da click derecho a otro vertice para borrar la arista que los une."; 
+  }
+  textSize(tamTexto - 3);
+  textAlign(CENTER);
+  text(mensaje, width / 2, height - (tamTexto * 5)); 
+}
+
+
+//Rellena la matriz de ceros
+void inicializarMatriz(int matriz[][]) {
+  for(int i = 0; i < matriz.length; i++) {
+    for(int j = 0; j < matriz.length; j++) {
+      matriz[i][j] = 0;  
+    }
+  }
 }

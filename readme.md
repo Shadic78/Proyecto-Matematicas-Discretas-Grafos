@@ -6,17 +6,16 @@
 - Notas: En algunos navegadores no funciona el borrar el nombre del vertice debido a que no permiten detectar cuando se presiona
 la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si ejecutas el archivo de manera local con Processing 3.
 
+## 18/04/19
+
+**Añadidos:**
+- Se agrego la funcionalidad de poder borrar aristas.
+
 ## 17/04/19
 
 **Añadidos:**
-- Se agrego que los grafos sean dirigidos.
+- Se agrego que el grafo sea dirigido.
 - Se agrego una función que permite dibujar flechas.
-
-**Correciones:**
-- Nada.
-
-**Problemas:**
-- Nada.
 
 **Screenshots:**
 
