@@ -6,6 +6,20 @@
 - Notas: En algunos navegadores no funciona el borrar el nombre del vertice debido a que no permiten detectar cuando se presiona
 la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si ejecutas el archivo de manera local con Processing 3.
 
+## 19/04/19
+### SE REDISEÑO LA INTERFAZ GRAFICA.
+
+**Añadidos:**
+- Se agrego un "menu de ayuda" en el cual estan las funcionalidades del programa.
+- Se agrego dos imagenes correspondientes al menu de ayuda.
+- Se agrego una imagen de background.
+
+**Sreenshots**
+
+![](img/screenshots/Screenshot3.png)
+![](img/screenshots/Screenshot4.png)
+
+
 ## 18/04/19
 
 **Añadidos:**
@@ -19,7 +33,7 @@ la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si eje
 
 **Screenshots:**
 
-![](img/Screenshot2.png)
+![](img/screenshots/Screenshot2.png)
 
 ## 12/04/19
 La interfaz grafica esta casi terminada, falta agregar el poder borrar vertices y aristas.
@@ -37,7 +51,7 @@ La interfaz grafica esta casi terminada, falta agregar el poder borrar vertices 
 
 **Screenshots:**
 
-![](img/Screenshot1.png)
+![](img/screenshots/Screenshot1.png)
 
 ## 11/04/19
 Se sigue trabajando en la interfaz grafica.
