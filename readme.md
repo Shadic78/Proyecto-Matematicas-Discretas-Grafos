@@ -6,6 +6,14 @@
 - Notas: En algunos navegadores no funciona el borrar el nombre del vertice debido a que no permiten detectar cuando se presiona
 la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si ejecutas el archivo de manera local con Processing 3.
 
+## 20/04/19
+
+**Añadidos:**
+- Se agrego la funcionalidad de poder borrar vertices al mantener presionado SHIFT y dar click izquierdo sobre un vertice.
+
+**Correciones:**
+- Se corrigio que al momento de nombrar un vertice y apretar la tecla 'h' se podia interactuar con el menu de ayuda.
+
 ## 19/04/19
 ### SE REDISEÑO LA INTERFAZ GRAFICA.
 
@@ -14,7 +22,7 @@ la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si eje
 - Se agrego dos imagenes correspondientes al menu de ayuda.
 - Se agrego una imagen de background.
 
-**Sreenshots**
+**Screenshots**
 
 ![](img/screenshots/Screenshot3.png)
 ![](img/screenshots/Screenshot4.png)
@@ -23,7 +31,7 @@ la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si eje
 ## 18/04/19
 
 **Añadidos:**
-- Se agrego la funcionalidad de poder borrar aristas.
+- Se agrego la funcionalidad de poder borrar aristas al mantener presionado SHIFT y dar click derecho sobre dos vertices.
 
 ## 17/04/19
 

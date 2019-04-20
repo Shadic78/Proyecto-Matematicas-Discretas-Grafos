@@ -1,25 +1,28 @@
 /*
 	Carlos Chan Gongora
  */
-/*
+/*******************
   ArrayLists para la parte grafica de los grafos
- */
+ *******************/
 // ArrayLists que almacenan las coordenadas (x, y) de los vertices
 ArrayList<Integer> verticesX = new ArrayList<Integer>();
 ArrayList<Integer> verticesY = new ArrayList<Integer>();
 // ArrayList que almacena los nombres de los vertices
 ArrayList<String> nombresVertices = new ArrayList<String>();
 
-// Matriz que representa al grafo
+// Matriz que representa al grafo internamente
 int[][] matrizAdyacencia = new int[50][50];
 
-int widthVertices = 40;
+// Variables de los mensajes que aparecen abajo izquierda de la pantalla
 int tamTexto = 16;
+String mensaje = " ";
+
+// Variables para los vertices
+int widthVertices = 40;
 int posVerticeArrastrando = 0;
 boolean nombrandoVertice = false;
 boolean moviendoVertice = false;
 String nombreVertice = "";
-String mensaje = " ";
 
 // Variables para las aristas
 boolean agregandoArista = false;
@@ -52,7 +55,7 @@ int colorNombresVertices2 = #444444;
 // Color de los mensajes
 int colorTextoMensajes = 0;
 int colorContenedorMensajes = #FF8D8D;
-//#FFDA8F
+
 // Fuente
 PFont fuente;
 
@@ -78,6 +81,14 @@ void setup() {
   // Cargar la imagen del background
   imgBackground = loadImage("img/background1.png");
   inicializarMatriz(matrizAdyacencia);
+  
+    int[][] matriz = {
+                {1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {9, 10, 11, 12}
+                };
+                
+  moverFilasMatriz(matriz, 3, 4, 2);
 }
 
 void draw() {
@@ -87,10 +98,6 @@ void draw() {
   imprimirNombresVertices();
   imprimirMensajes();
   imprimirMenuAyuda();
-
-  //fill(255);
-  //text("Arrastrando = " + moviendoVertice + "    Nombrando = " + nombrandoVertice, width / 2, 20);
-  //text("AgregandoArista = " + agregandoArista, width / 2, 35);
 }
 
 void mouseDragged() {
@@ -101,6 +108,7 @@ void mouseClicked() {
   agregarVertices();
   agregarAristas();
   eliminarAristas(matrizAdyacencia);
+  eliminarVertices(matrizAdyacencia);
 }
 
 void mouseReleased() {
@@ -115,7 +123,7 @@ void keyPressed() {
 }
 
 /************************************
- VERTICES
+               VERTICES
  ************************************/
 /*
   Imprime los vertices
@@ -246,8 +254,108 @@ void nombrarVertice() {
   }
 }
 
+/*---------------
+    BORRAR VERTICES
+-------------------*/
+/*
+  Elimina un vertice y todas las aristas que conecten con el.
+*/
+void eliminarVertices(int matriz[][]) {
+  int vertice = 0;
+  if (!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice) {
+    if (keyPressed && keyCode == SHIFT && mouseButton == LEFT) {
+      // Obtener el vertice al que se le hizo click
+      vertice = mouseSobreVertice(0); 
+      if (vertice >= 0) {
+        // Se elimina la fila y columna correspondiente al vertice
+        moverColumnasMatriz(matriz, verticesX.size(), verticesX.size(), vertice + 1);
+        moverFilasMatriz(matriz, verticesX.size(), verticesX.size(), vertice + 1);
+        
+        // Se elimina la posicion del vertice dentro de los arrayList
+        verticesX.remove(vertice);
+        verticesY.remove(vertice);
+        nombresVertices.remove(vertice);
+        
+        println("Vertice eliminado: [" + vertice + "]" + "[" + vertice + "]");
+      }
+    }
+  } 
+}
+
+/*
+  Desplaza las columnas de la matriz una posicion a la "izquierda"
+
+  Ejemplo:
+  int[][] matriz = {
+                {1, 2, 3, 4},
+                {5, 6, 7, 8}
+                };
+  moverColumnasMatriz(matriz, 2, 4, 2);
+  
+  la salida sera la siguiente:
+  
+  {
+   {1, 3, 4, 0}
+   {5, 7, 8, 0}
+            }
+  (Se rellenan los huecos con ceros)
+*/
+void moverColumnasMatriz(int matriz[][], int filasMatriz, int columnasMatriz, int posicion) {
+  
+  if(posicion > 0 && posicion < columnasMatriz) {
+    for(int i = 0; i < filasMatriz; i++) {
+      for(int j = posicion; j < columnasMatriz; j++) {
+        // Mover una columna a la izquierda los valores
+        matriz[i][j - 1] = matriz[i][j]; 
+        // Rellenar la ultima columna con ceros
+        if(j  == columnasMatriz - 1) {
+          matriz[i][j] = 0;  
+        }
+      }
+    }
+  }
+   
+}
+
+/*
+  Desplaza las filas de la matriz una posicion "arriba"
+
+  Ejemplo:
+  int[][] matriz = {
+                {1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {9, 10, 11, 12}
+                };
+  moverFilasMatriz(matriz, 3, 4, 2);
+  
+  la salida sera la siguiente:
+  
+  {
+   {1, 2, 3, 4}
+   {9, 10, 11, 12}
+   {0, 0, 0, 0}
+               }
+  (Se rellenan los huecos con ceros)
+*/
+void moverFilasMatriz(int matriz[][], int filasMatriz, int columnasMatriz, int posicion) {
+  
+  if(posicion > 0 && posicion < filasMatriz) {
+    for(int i = posicion; i < filasMatriz; i++) {
+      for(int j = 0; j < columnasMatriz; j++) {
+        // Mover una columna a la izquierda los valores
+        matriz[i - 1][j] = matriz[i][j]; 
+        // Rellenar la ultima columna con ceros
+        if(i  == filasMatriz - 1) {
+          matriz[i][j] = 0;  
+        }
+      }
+    }
+  }
+  
+}
+
 /************************************
- ARISTAS
+                 ARISTAS
  ************************************/
 /*
   Esta funcion agrega aristas.
@@ -362,12 +470,13 @@ void eliminarAristas(int matriz[][]) {
     if (keyPressed && keyCode == SHIFT && mouseButton == RIGHT) {
       vertice = mouseSobreVertice(0); 
       if (vertice >= 0) {
-        println("Click y shift");
+        println("Click derecho y shift");
         posVertice1 = vertice;
         borrandoArista = true;
       }
     }
-  } else if (mouseButton == RIGHT && borrandoArista) {
+  } 
+  else if (mouseButton == RIGHT && borrandoArista) {
     vertice = mouseSobreVertice(0);
     if (vertice >= 0 && vertice != posVertice1) {
       posVertice2 = vertice;
@@ -390,11 +499,14 @@ void imprimirMensajes() {
     //mensaje = "- Agrega vertices dando clic izquierdo con el mouse.\n- Puedes mover de lugar los vertices.\n";
     //mensaje += "- Puedes agregar aristas dando click derecho a dos vertices.\n- Puedes borrar aristas manteniendo pulsado SHIFT y dando click derecho a dos vertices.";
     mensaje = "";
-  } else if (nombrandoVertice) {
+  } 
+  else if (nombrandoVertice) {
     mensaje = "Ponle un nombre al vertice, acepta con ENTER";
-  } else if (agregandoArista) {
-    mensaje = "Da click derecho en otro vertice para unirlos con una arista";
-  } else if (borrandoArista) {
+  } 
+  else if (agregandoArista) {
+    mensaje = "Da click derecho a otro vertice para unirlos con una arista";
+  } 
+  else if (borrandoArista) {
     mensaje = "Da click derecho a otro vertice para borrar la arista que los une.";
   }
   
@@ -413,7 +525,7 @@ void imprimirMensajes() {
 }
 
 
-//Rellena la matriz de ceros
+//Rellena una matriz cuadrada de ceros
 void inicializarMatriz(int matriz[][]) {
   for (int i = 0; i < matriz.length; i++) {
     for (int j = 0; j < matriz.length; j++) {
@@ -435,9 +547,9 @@ void imprimirMenuAyuda() {
    }
 }
 
-// Es un interuptor
+// Es un interuptor, si se esta mostrando el menu entonces se oculta y viceversa
 void ocultarMenuAyuda() {
-  if(key == 'h' || key == 'H') {
+  if((key == 'h' || key == 'H') && !nombrandoVertice) {
     if(mostrarMenuAyuda) {
       mostrarMenuAyuda = false; 
     }
