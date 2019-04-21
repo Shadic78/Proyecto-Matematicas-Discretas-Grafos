@@ -45,7 +45,7 @@ que queremos eliminar (7, 8, 9) una posición "arriba".
 
 De esta manera elimino un vertice de la matriz de adyacencia, pero sumado a esto tambien tengo que eliminar la posición del vertice en los arrayList que utilizo.
 
-![](img/borrarVertices/grafo.png)
+![](img/borrarVertices/matriz.png)
 
 ## 19/04/19
 ### SE REDISEÑO LA INTERFAZ GRAFICA.
