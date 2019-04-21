@@ -1,10 +1,13 @@
-### Proyecto de grafos 
-- link: https://shadic78.github.io/Proyecto-Matematicas-Discretas-Grafos/.
+### Proyecto final de la materia "Matemáticas discretas".
+- Enlace para ver el proyecto: https://shadic78.github.io/Proyecto-Matematicas-Discretas-Grafos/.
 ---
 
 ## Bitacora
-- Notas: En algunos navegadores no funciona el borrar el nombre del vertice debido a que no permiten detectar cuando se presiona
+**Notas:**
+- En algunos navegadores no funciona el borrar el nombre del vertice debido a que no permiten detectar cuando se presiona
 la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si ejecutas el archivo de manera local con Processing 3.
+- Muchas veces al querer ver el proyecto utilizando el enlace de arriba solo sale una pantalla gris (No he descubierto el motivo), esto se soluciona
+recargando la ventana.
 
 ## 20/04/19
 
@@ -13,6 +16,36 @@ la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si eje
 
 **Correciones:**
 - Se corrigio que al momento de nombrar un vertice y apretar la tecla 'h' se podia interactuar con el menu de ayuda.
+---
+
+**Explicación de parte del proceso que utilice para borrar vertices:**
+
+Para borrar un vertice hay que borrar las aristas que conectan al mismo, el proceso es el siguiente:
+
+1.- Teniendo una matriz de adyacencia que representa al siguiente grafo:
+
+![](img/borrarVertices/grafo.png)
+
+2.- Supongamos que queremos eliminar el vertice "6".
+
+2.1.- Para ello tenemos que visualizar la matriz de esta manera, ahora hay que "unir" los "bloques" que quedaron de la matriz.
+
+3.- "Movemos" una posición a la "izquierda" las columnas que estan una posicion adelante del vertice que queremos eliminar (7, 8, 9)
+
+3.1.- Debido a ello en la ultima columna de la matriz nos queda una "columna vacia".
+
+3.2.- Rellenamos esa "columna vacia" con ceros.
+
+4.- Ahora hay que repetir el proceso pero con las filas, hay que "mover" todas las filas que estan una posicion adelante del vertice
+que queremos eliminar (7, 8, 9) una posición "arriba".
+
+4.1.- Nos queda una "fila vacia" en la ultima fila de la matriz.
+
+4.2.- Rellenamos la "fila vacia" con ceros.
+
+De esta manera elimino un vertice de la matriz de adyacencia, pero sumado a esto tambien tengo que eliminar la posición del vertice en los arrayList que utilizo.
+
+![](img/borrarVertices/grafo.png)
 
 ## 19/04/19
 ### SE REDISEÑO LA INTERFAZ GRAFICA.
