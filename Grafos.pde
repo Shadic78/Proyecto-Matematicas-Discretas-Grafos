@@ -10,8 +10,10 @@ ArrayList<Integer> verticesY = new ArrayList<Integer>();
 // ArrayList que almacena los nombres de los vertices
 ArrayList<String> nombresVertices = new ArrayList<String>();
 
-// Matriz que representa al grafo internamente
+// Matriz que almacena las conexiones de los vertices
 int[][] matrizAdyacencia = new int[50][50];
+// Matriz que almacena los costos de las aristas
+int[][] matrizCostos = new int[50][50];
 
 // Variables de los mensajes que aparecen abajo izquierda de la pantalla
 int tamTexto = 16;
@@ -27,6 +29,8 @@ String nombreVertice = "";
 // Variables para las aristas
 boolean agregandoArista = false;
 boolean borrandoArista = false;
+boolean asignandoCostoArista = false;
+String costoArista = "";
 // Guarda la posicion en los arrayList del primer vertice al que le das click
 int posVertice1 = -1;
 // Guarda la posicion en los arrayList del segundo vertice al que le das click
@@ -80,15 +84,8 @@ void setup() {
 
   // Cargar la imagen del background
   imgBackground = loadImage("img/background1.png");
-  inicializarMatriz(matrizAdyacencia);
-  
-    int[][] matriz = {
-                {1, 2, 3, 4},
-                {5, 6, 7, 8},
-                {9, 10, 11, 12}
-                };
-                
-  moverFilasMatriz(matriz, 3, 4, 2);
+  inicializarMatriz(matrizAdyacencia, 0);
+  inicializarMatriz(matrizCostos, 0);
 }
 
 void draw() {
@@ -107,8 +104,8 @@ void mouseDragged() {
 void mouseClicked() {
   agregarVertices();
   agregarAristas();
-  eliminarAristas(matrizAdyacencia);
-  eliminarVertices(matrizAdyacencia);
+  eliminarAristas(matrizAdyacencia, matrizCostos);
+  eliminarVertices(matrizAdyacencia, matrizCostos);
 }
 
 void mouseReleased() {
@@ -119,6 +116,7 @@ void mouseReleased() {
 
 void keyPressed() {
   nombrarVertice();
+  asignarCostoAristas(matrizCostos);
   ocultarMenuAyuda();
 }
 
@@ -193,13 +191,13 @@ int getDistanciaEntrePuntos(int x1, int y1, int x2, int y2) {
  se esta agregando una arista.
  */
 void moverVertice() {
-  if (!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista) {
+  if (!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista) {
     // Obtiene la posicion del vertice al que hiciste click
     posVerticeArrastrando = mouseSobreVertice(0);
   }
-  // Este if se activa si posVerticeArrastrando es mayor o igual a cero, es decir
+  // Este if se activa si posVerticeArrastrando es mayor o igual a cero, es decir 
   // si hiciste click sobre un vertice.
-  if (posVerticeArrastrando >= 0 && !nombrandoVertice && !agregandoArista && !borrandoArista) {
+  if (posVerticeArrastrando >= 0 && !nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista) {
     moviendoVertice = true;
     verticesX.set(posVerticeArrastrando, mouseX);
     verticesY.set(posVerticeArrastrando, mouseY);
@@ -212,7 +210,7 @@ void moverVertice() {
  Al activar nombrandoVertice o agregandoArista o moviendoVertice esta funcion se "bloquea", al igual que la de moverVertice()
  */
 void agregarVertices() {
-  if (!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista && mouseButton == LEFT && !keyPressed) {
+  if (!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista && mouseButton == LEFT && !keyPressed) {
     if (!(mouseSobreVertice(widthVertices) >= 0)) {
       verticesX.add(mouseX); 
       verticesY.add(mouseY); 
@@ -260,16 +258,20 @@ void nombrarVertice() {
 /*
   Elimina un vertice y todas las aristas que conecten con el.
 */
-void eliminarVertices(int matriz[][]) {
+void eliminarVertices(int matrizAdyacencia[][], int matrizCostos[][]) {
   int vertice = 0;
-  if (!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice) {
+  if (!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice && !asignandoCostoArista) {
     if (keyPressed && keyCode == SHIFT && mouseButton == LEFT) {
       // Obtener el vertice al que se le hizo click
       vertice = mouseSobreVertice(0); 
       if (vertice >= 0) {
-        // Se elimina la fila y columna correspondiente al vertice
-        moverColumnasMatriz(matriz, verticesX.size(), verticesX.size(), vertice + 1);
-        moverFilasMatriz(matriz, verticesX.size(), verticesX.size(), vertice + 1);
+        // Se elimina la fila y columna correspondiente al vertice de la matriz de adyacencia
+        moverColumnasMatriz(matrizAdyacencia, verticesX.size(), verticesX.size(), vertice);
+        moverFilasMatriz(matrizAdyacencia, verticesX.size(), verticesX.size(), vertice);
+        
+        // Se elimina la fila y columna correspondiente al vertice de la matriz de costos
+        moverColumnasMatriz(matrizCostos, verticesX.size(), verticesX.size(), vertice);
+        moverFilasMatriz(matrizCostos, verticesX.size(), verticesX.size(), vertice);
         
         // Se elimina la posicion del vertice dentro de los arrayList
         verticesX.remove(vertice);
@@ -290,7 +292,7 @@ void eliminarVertices(int matriz[][]) {
                 {1, 2, 3, 4},
                 {5, 6, 7, 8}
                 };
-  moverColumnasMatriz(matriz, 2, 4, 2);
+  moverColumnasMatriz(matriz, 2, 4, 1);
   
   la salida sera la siguiente:
   
@@ -302,14 +304,18 @@ void eliminarVertices(int matriz[][]) {
 */
 void moverColumnasMatriz(int matriz[][], int filasMatriz, int columnasMatriz, int posicion) {
   
-  if(posicion > 0 && posicion < columnasMatriz) {
+  if(posicion >= 0 && posicion < columnasMatriz) {
     for(int i = 0; i < filasMatriz; i++) {
       for(int j = posicion; j < columnasMatriz; j++) {
-        // Mover una columna a la izquierda los valores
-        matriz[i][j - 1] = matriz[i][j]; 
-        // Rellenar la ultima columna con ceros
-        if(j  == columnasMatriz - 1) {
+        // Se rellena la ultima columna de la matriz con ceros
+        if(j == columnasMatriz - 1) {
           matriz[i][j] = 0;  
+        }
+        // De lo contrario se realiza el procedimiento de mover las columnas
+        else {
+          // Mover una columna a la izquierda los valores
+          matriz[i][j] = matriz[i][j + 1]; 
+          
         }
       }
     }
@@ -326,7 +332,7 @@ void moverColumnasMatriz(int matriz[][], int filasMatriz, int columnasMatriz, in
                 {5, 6, 7, 8},
                 {9, 10, 11, 12}
                 };
-  moverFilasMatriz(matriz, 3, 4, 2);
+  moverFilasMatriz(matriz, 3, 4, 1);
   
   la salida sera la siguiente:
   
@@ -339,15 +345,18 @@ void moverColumnasMatriz(int matriz[][], int filasMatriz, int columnasMatriz, in
 */
 void moverFilasMatriz(int matriz[][], int filasMatriz, int columnasMatriz, int posicion) {
   
-  if(posicion > 0 && posicion < filasMatriz) {
+  if(posicion >= 0 && posicion < filasMatriz) {
     for(int i = posicion; i < filasMatriz; i++) {
       for(int j = 0; j < columnasMatriz; j++) {
-        // Mover una columna a la izquierda los valores
-        matriz[i - 1][j] = matriz[i][j]; 
         // Rellenar la ultima columna con ceros
         if(i  == filasMatriz - 1) {
           matriz[i][j] = 0;  
         }
+        else {
+          // Mover una columna a la izquierda los valores
+          matriz[i][j] = matriz[i + 1][j];   
+        }
+
       }
     }
   }
@@ -369,25 +378,32 @@ void moverFilasMatriz(int matriz[][], int filasMatriz, int columnasMatriz, int p
  posterior reinicializa las variables de las posiciones de los vertices y desactiva agregandoArista.
  */
 void agregarAristas() {
-  if (mouseButton == RIGHT && !keyPressed && !agregandoArista && !borrandoArista && verticesX.size() > 1) {
+  if (mouseButton == RIGHT && !keyPressed && !agregandoArista && !borrandoArista && !asignandoCostoArista && verticesX.size() > 1) {
     int pos = mouseSobreVertice(0);
     if (pos >= 0 && posVertice1 < 0) {
       agregandoArista = true;
       posVertice1 = pos;
       //mensaje = "Da click en otro vertice para unirlos con una arista";
     }
-  } else if (mouseButton == RIGHT && agregandoArista) {
+  } 
+  else if (mouseButton == RIGHT && agregandoArista) {
     int pos = mouseSobreVertice(0);
     if (pos >= 0 && pos != posVertice1) {
       posVertice2 = pos;
+      // Se asigna que hay una conexion entre los vertices en la matriz de adyacencia
       matrizAdyacencia[posVertice1][posVertice2] = 1;
-      //matrizAdyacencia[posVertice2][posVertice1] = 1;
+      // Se inicializa el peso de la arista a 1
+      matrizCostos[posVertice1][posVertice2] = 1;
       println("Agregado arista: ");
       println("[" + posVertice1 + "][" + posVertice2 + "]" + " = " + matrizAdyacencia[posVertice1][posVertice2]);
       //println("[" + posVertice2 + "][" + posVertice1 + "]" + " = " + matrizAdyacencia[posVertice2][posVertice1] + "\n");
-      posVertice1 = -1;
-      posVertice2 = -1;
+      //posVertice1 = -1;
+      //posVertice2 = -1;
       agregandoArista = false;
+      asignandoCostoArista = true;
+      // Variable que se utiliza para concatenar los valores introducidos por el usuario en la funcion
+      // asignarCostoArista()
+      costoArista = "asignando";
     }
   }
 }
@@ -407,8 +423,19 @@ void imprimirAristas() {
         stroke(colorArista);
         if (matrizAdyacencia[i][j] == 1) {
           fill(colorArista);
-          // Se dibuja la flecha solo con el segundo triangulo
-          dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 0, 5, widthVertices / 2 + grosorBordeVertice);
+          // Si los vertices estan conectados de los dos lados se imprime una sola flecha con dos puntas
+          if(matrizAdyacencia[j][i] == 1) {
+            dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 5, 5, widthVertices / 2 + grosorBordeVertice, true);
+            // Se imprime el costo de la arista al primer vertice, el costo de la arista al segundo vertice se imprime
+            // despues.
+            imprimirMensajeConCirculo(str(matrizCostos[j][i]), verticesX.get(j), verticesY.get(j), verticesX.get(i), verticesY.get(i));
+          }
+          else {
+            // De lo contrario se dibuja una flecha con sola la punta del final
+            dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 0, 5, widthVertices / 2 + grosorBordeVertice, true);  
+          }            
+          // Se imprime el costo de la arista a la que apunta la flecha (en caso de que los vertices tengan una conexion unidireccional)
+          imprimirMensajeConCirculo(str(matrizCostos[i][j]), verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));
         }
         if (agregandoArista) {
           // Si se esta agregando una arista se dibuja una linea desde el vertice al que hiciste click
@@ -425,37 +452,42 @@ void imprimirAristas() {
  Sus parametros son las coordenadas de los 2 puntos y el tamaño de la flecha inicial y final y el desface con respecto al cual
  se dibujara la punto de la flecha.
  */
-void dibujarFlecha(float x0, float y0, float x1, float y1, float tamTrianguloInicio, float tamTrianguloFinal, int desfaceFlecha) {
+void dibujarFlecha(float x0, float y0, float x1, float y1, float tamTrianguloInicio, float tamTrianguloFinal, int desfaceFlecha, boolean dibujarLinea) {
 
   // Aumenta el tamaño del triangulo de la flecha
   float aumentarTam = 1;
-
-  // Dibujar la linea entre los dos puntos
-  strokeCap(SQUARE);
-  line(x0, y0, x1, y1);
-
   // Obtener el angulo entre los puntos
   float angulo = atan2(y1 - y0, x1 - x0);
+
+  // Dibujar la linea entre los dos puntos
+  if(dibujarLinea) {
+    strokeCap(SQUARE);
+    line(x0, y0, x1, y1); 
+  }
 
   /* Dibujar los triangulos */
 
   // triangulo del inicio
-  pushMatrix();
-  translate(x0, y0);
-  rotate(angulo + PI);
-  triangle(-tamTrianguloInicio * aumentarTam - desfaceFlecha, -tamTrianguloInicio, 
-    -tamTrianguloInicio * aumentarTam - desfaceFlecha, tamTrianguloInicio, 
-    -(widthVertices / 2), 0);
-  popMatrix();
-
+  if(tamTrianguloInicio > 0) {
+     pushMatrix();
+    translate(x0, y0);
+    rotate(angulo + PI);
+    triangle(-tamTrianguloInicio * aumentarTam - desfaceFlecha, -tamTrianguloInicio, 
+      -tamTrianguloInicio * aumentarTam - desfaceFlecha, tamTrianguloInicio, 
+      -desfaceFlecha, 0);
+    popMatrix(); 
+  }
+  
   // triangulo del final
-  pushMatrix();
-  translate(x1, y1);
-  rotate(angulo);
-  triangle(-tamTrianguloFinal * aumentarTam - desfaceFlecha, -tamTrianguloFinal, 
-    -tamTrianguloFinal * aumentarTam - desfaceFlecha, tamTrianguloFinal, 
-    -desfaceFlecha, 0);
-  popMatrix();
+  if(tamTrianguloFinal > 0) {
+    pushMatrix();
+    translate(x1, y1);
+    rotate(angulo);
+    triangle(-tamTrianguloFinal * aumentarTam - desfaceFlecha, -tamTrianguloFinal, 
+      -tamTrianguloFinal * aumentarTam - desfaceFlecha, tamTrianguloFinal, 
+      -desfaceFlecha, 0);
+    popMatrix();
+  }
 }
 
 /*
@@ -464,9 +496,9 @@ void dibujarFlecha(float x0, float y0, float x1, float y1, float tamTrianguloIni
  y se activa borrandoArista, cuando le das click derecho a otro vertice se guarda su posicion
  y se cambia el valor que haya en esa casilla de la matriz por un 0, de esa manera se elimina la arista.
  */
-void eliminarAristas(int matriz[][]) {
+void eliminarAristas(int matrizAdyacencia[][], int matrizCostos[][]) {
   int vertice = 0;
-  if (!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice) {
+  if (!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice && !asignandoCostoArista) {
     if (keyPressed && keyCode == SHIFT && mouseButton == RIGHT) {
       vertice = mouseSobreVertice(0); 
       if (vertice >= 0) {
@@ -480,22 +512,128 @@ void eliminarAristas(int matriz[][]) {
     vertice = mouseSobreVertice(0);
     if (vertice >= 0 && vertice != posVertice1) {
       posVertice2 = vertice;
-      matriz[posVertice1][posVertice2] = 0;
+      // Se elimina la arista de la matriz de adyacencia
+      matrizAdyacencia[posVertice1][posVertice2] = 0;
+      
+      // Se elimina la arista de la matriz de costos
+      matrizCostos[posVertice1][posVertice2] = 0;
+      
       println("Eliminado arista: ");
-      println("[" + posVertice1 + "][" + posVertice2 + "]" + " = " + matriz[posVertice1][posVertice2]);
+      println("[" + posVertice1 + "][" + posVertice2 + "]" + " = " + matrizAdyacencia[posVertice1][posVertice2]);
       posVertice1 = -1;
       posVertice2 = -1;
       borrandoArista = false;
     }
   }
 }
+
+/*
+  Imprime un mensaje encerrado en un circulo usando como parametro el texto a imprimir y las coordenadas de
+  2 vertices.
+*/
+void imprimirMensajeConCirculo(String mensaje, int x0, int y0, int x1, int y1) {
+    // Obtener el angulo entre los puntos (debido al sistema de coordenadas hay que sumarle PI o 180 grados para que funcione bien)
+  float angulo = atan2(y1 - y0, x1 - x0) + PI;
+   /*
+    Para ubicar correctamente los circulos con los pesos de las aristas se utiliza la ecuacion parametrica de la circunferencia:
+    x = radio * cos(angulo)
+    y = radio * sin(angulo)
+    En este caso se toma radio =  widthVertices + textWidth(mensaje) / 2, esto para que el circulo se adapte a la cantidad de caracteres
+    que tenga el texto y no se pegue mucho al vertice.
+  */
+  int radio = int(widthVertices + textWidth(mensaje) / 2);
+  // El padding que tiene el circulo en el que esta el texto
+  int padding = 8;
+  
+  pushMatrix();
+  translate(x1, y1);
+  fill(colorArista);
+  noStroke();
+  textAlign(CENTER, CENTER);
+  ellipse(radio * cos(angulo), radio * sin(angulo), textWidth(mensaje) + padding, textWidth(mensaje) + padding);
+  
+  fill(255);
+  text(mensaje, radio * cos(angulo), radio * sin(angulo));
+  popMatrix();
+}
+
+/*
+  Lee los numeros ingresados por el usuario y los almacena en la matriz de costos
+ */
+void asignarCostoAristas(int matrizCostos[][]) {
+  if (asignandoCostoArista) {
+    // Ingresar el costo
+    if (keyCode == ENTER) {
+      // Si presionaste enter sin teclear un valor entonces se pone por defecto el valor 1 como costo.
+      if(costoArista.equals("asignando")) {
+        costoArista = "1";  
+      }
+      // Si presionaste enter y la cadena que ingresaste tiene mas de cero caracteres y el valor convertido a entero es mayor de cero.
+      // entonces cambia el valor de las variables para declarar que se termino de asignar costo a la arista.
+      // (no te deja asignarle costo cero a una arista)
+      if(costoArista.length() > 0 && int(costoArista) > 0){
+        posVertice1 = -1;
+        posVertice2 = -1;
+        asignandoCostoArista = false;
+        costoArista = "";         
+      }
+    }
+    // Borrar
+    else if (keyCode == BACKSPACE || keyCode == 8) {
+      if (costoArista.length() > 0) {
+        // Si borras apenas creas la arista entonces inicializa el costo en 1.
+        // (cuando se crea una arista, la variable costoArista almacena la cadena "asignando")
+        if (costoArista.equals("asignando")) {
+          costoArista = "1";
+        }
+        else {
+          costoArista = costoArista.substring(0, costoArista.length() - 1);
+        }
+        // Asigna el nuevo costo
+        matrizCostos[posVertice1][posVertice2] = int(costoArista);          
+        println("length: " + costoArista.length());
+        println(costoArista);
+      }
+    }
+    // Escribir el costo
+    else if (key >= '0' && key <= '9') {
+      // Hace que el 1 que aparece por defecto al crear la arista sea reemplazado con la tecla que presiones,
+      // excepto si presionas cero, entonces no lo cambia.
+      // (Cuando creas una arista el valor de costoArista es el string: "asignando", lo cual uso para saber si el usuario no ha ingresado ningun numero)
+      if (costoArista.equals("asignando") && key != '0') {
+        costoArista = "";
+      }
+      /*  Este if sirve para que si la longitud de la cadena que almacena el costo de la arista es cero,
+          es decir si esta vacia, entonces no permite que ingreses el valor 0, sin este if podrias escribir lo siguiente: 00000000001,
+          lo cual hace que el programa no funcione correctamente, solo puedes escribir el cero si ya ingresaste antes otro numero que no sea cero.
+          
+          El !(costoArista.equals("asignando")) sirve para que no se concatene lo que estas ingresando si la primera tecla
+          que presionas al crear la arista es cero, debido a que al crear la arista, la variable costoArista tiene el string "asignando",
+          sin el !(costoArista.equals("asignando")) lo que sucederia seria que internamente si presionas cero y como costoArista = "asignando",
+          entonces costoArista concatenaria de la siguiente manera: costoArista = "asignando000000", lo cual es un error.
+      */
+      if(!(key == '0' && costoArista.length() == 0) && !(costoArista.equals("asignando"))) {
+        // El numero que el usuario ingrese tendra como maximo 9 digitos, esto debido a que
+        // el numero maximo que puede almacenar un int tiene 10 digitos.
+        if(costoArista.length() < 9) {
+          // Concatena lo que ingresa el usuario
+          costoArista += str(key); 
+          // Asigna el numero que el usuario introdujo
+          matrizCostos[posVertice1][posVertice2] = int(costoArista);  
+        }  
+        //println(costoArista);
+      }
+    }
+  }
+}
+
 /************************************
                OTROS
  ************************************/
 
 // Mensajes que ayudan al usuario
 void imprimirMensajes() {
-  if (!nombrandoVertice && !agregandoArista && !borrandoArista) {
+  if (!nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista) {
     //mensaje = "- Agrega vertices dando clic izquierdo con el mouse.\n- Puedes mover de lugar los vertices.\n";
     //mensaje += "- Puedes agregar aristas dando click derecho a dos vertices.\n- Puedes borrar aristas manteniendo pulsado SHIFT y dando click derecho a dos vertices.";
     mensaje = "";
@@ -507,13 +645,20 @@ void imprimirMensajes() {
     mensaje = "Da click derecho a otro vertice para unirlos con una arista";
   } 
   else if (borrandoArista) {
-    mensaje = "Da click derecho a otro vertice para borrar la arista que los une.";
+    mensaje = "Da click derecho a otro vertice para borrar la arista que los une";
+  }
+  else if (asignandoCostoArista) {
+    mensaje = "Asignale un costo a la arista";
+    if(int(costoArista) == 0) {
+      mensaje += " (no puedes asignar un costo de cero)" ; 
+    }
   }
   
   if(mensaje.length() > 0) {
     // Contenedor del mensaje
     fill(colorContenedorMensajes);
     noStroke();
+    rectMode(CORNER);
     rect(0, height - (tamTexto * 3) - 5, textWidth(mensaje) + 65, tamTexto + 10, 0, 10, 10, 0);
   
     // Texto del mensaje
@@ -525,13 +670,23 @@ void imprimirMensajes() {
 }
 
 
-//Rellena una matriz cuadrada de ceros
-void inicializarMatriz(int matriz[][]) {
+//Rellena una matriz cuadrada con el numero que le pases de parametro
+void inicializarMatriz(int matriz[][], int num) {
   for (int i = 0; i < matriz.length; i++) {
     for (int j = 0; j < matriz.length; j++) {
-      matriz[i][j] = 0;
+      matriz[i][j] = num;
     }
   }
+}
+
+void imprimirMatriz() {
+  for (int i = 0; i < matrizAdyacencia.length; i++) {
+    print(i + ".- ");
+    for (int j = 0; j < matrizAdyacencia.length; j++) {
+      print(matrizAdyacencia[i][j]);
+    }
+    println("");
+  } 
 }
 
 /************************************

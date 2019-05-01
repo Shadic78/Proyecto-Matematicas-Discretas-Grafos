@@ -9,6 +9,19 @@ la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si eje
 - Muchas veces al querer ver el proyecto utilizando el enlace de arriba solo sale una pantalla gris (No he descubierto el motivo), esto se soluciona
 recargando la ventana.
 
+## 30/04/19
+
+**Añadidos:**
+- Se agrego que el grafo sea ponderado.
+- Se agrego la funcionalidad de poder asignarle un "costo" a las aristas (Debido a que el grafo es dirigido los costos de las aristas "de ida y de vuelta" pueden ser distintos).
+
+**Correciones:**
+- Se corrigio que cuando borrabas un vertice, si el vertice que borraste es el ultimo que añadiste entonces al momento de colocar un nuevo vertice este nuevo vertice conservaba las aristas del vertice anterior que borraste.
+
+**Screenshots**
+
+![](img/screenshots/Screenshot5.png)
+
 ## 20/04/19
 
 **Añadidos:**
@@ -81,7 +94,7 @@ La interfaz grafica esta casi terminada, falta agregar el poder borrar vertices 
 
 **Añadidos:**
 - Se agrego una "matriz de adyacencia", la cual representa al grafo (no dirigido).
-- Se agrego el poder agregar vertices al dar clic derecho.
+- Se agrego el poder agregar aristas al dar clic derecho a dos vertices.
 
 **Correciones:**
 - Puedes borrar el nombre del vertice que estes escribiendo.
@@ -124,6 +137,6 @@ Se empezo el proyecto, se esta trabajando la interfaz grafica.
 - se agrego que no se pueda poner un vertice muy cerca de otro.
 
 **Problemas:**
-- **(Corregido 11/04/19)** Al mover un rapido el mouse se deja de arrastrar el vertice.
+- **(Corregido 11/04/19)** Al mover rapido el mouse se deja de arrastrar el vertice.
 - Al dar clic se verifica que no se puedan poner muy cerca los vertices, pero no se verifica lo mismo para arrastrar los vertices.
 - **(Corregido 11/04/19)** Al arrastrar un vertice cerca de algun otro vertice se "atraen", como un iman.
