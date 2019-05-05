@@ -1,4 +1,6 @@
 ### Proyecto final de la materia "Matemáticas discretas".
+Si quieres probar este proyecto te recomiendo ampliamente que lo descargues y lo ejecutes con Processing 3, debido a que la version web del enlace de abajo algunas veces no funciona como debería hacerlo.
+
 - Enlace para ver el proyecto: https://shadic78.github.io/Proyecto-Matematicas-Discretas-Grafos/.
 ---
 
@@ -8,6 +10,27 @@
 la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si ejecutas el archivo de manera local con Processing 3.
 - Muchas veces al querer ver el proyecto utilizando el enlace de arriba solo sale una pantalla gris (No he descubierto el motivo), esto se soluciona
 recargando la ventana.
+
+## 05/05/19
+
+**Añadidos:**
+- Se implemento el algoritmo de Dijkstra para buscar la ruta mas corta entre dos vertices. Para activar la busqueda de la ruta mas corta se tiene que dar click izquierdo a dos vertices manteniendo presionado la tecla CONTROL.
+- Se agrego que para mostrar la ruta mas corta entre dos vertices los bordes de los vertices y las aristas se resalten con otro color.
+- Se agrego que al querer eliminar una arista o al querer usar la ruta mas corta ahora el primer vertice al que le des click se resaltara con otro color.
+
+**Correciones:**
+- Se corrigio que antes podias intentar borrar una arista aun si tu grafo solo tenia un vertice, debido a ello el programa se quedaba atorado y tenias que cerrarlo y volver a abrirlo.
+
+**Problemas:**
+- Las teclas "auxiliares" se me estan acabando y siento que es muy impractico que al dar click izquierdo o derecho realices una accion y si das click izquierdo o derecho presionando shift o control realices otras acciones distintas, debido a ello estoy considerando reemplazar ese sistema por un verdadero menu de opciones y no solo un "cartel" que te dice que puedes hacer y como hacerlo.
+
+**Screenshots**
+
+![](img/screenshots/Screenshot6.png)
+![](img/screenshots/Screenshot7.png)
+![](img/screenshots/Screenshot8.png)
+![](img/screenshots/Screenshot9.png)
+
 
 ## 30/04/19
 
