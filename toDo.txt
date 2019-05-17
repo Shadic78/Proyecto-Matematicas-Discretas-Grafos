@@ -1,0 +1,25 @@
+Pasos para cambiar de grafos a arboles
+
+1.- Cambiar de grafos a arboles. (yo) 
+1.1.- No dirigido, sin costos (1). (yo)
+1.2.- Verificar que sea un arbol valido. (nicolas)
+
+2.- Calcular altura al agregar aristas. (nicolas)
+2.1.- Calcular las hojas. (yo)
+2.2.- Calcular las ramas. (yo)
+2.3- Imprimir vertices, hojas, ramas, altura. (yo)
+
+_____________________________________________
+
+Por programar:
+
+Arboles:
+1.- Busqueda en anchura.
+2.- Calcular la altura.
+3.- Calcular las hojas.
+4.- Calcular las ramas.
+
+En general: (yo)
+1.- Agregar vertices desde setup.
+2.- Agregar aristas desde setup.
+
