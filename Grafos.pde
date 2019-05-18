@@ -15,6 +15,12 @@ int[][] matrizAdyacencia = new int[50][50];
 // Matriz que almacena los costos de las aristas
 int[][] matrizCostos = new int[50][50];
 
+//Matriz de adyacencia secundaria para el manejo de los colores de cada vértice
+int[][] adyacencia = new int[50][50];
+//Vector en el que se almacenan los colores de cada vértice
+int[] coloresVert = new int[50];
+
+
 // Variables de los mensajes que aparecen abajo izquierda de la pantalla
 int tamTexto = 16;
 String mensaje = " ";
@@ -85,6 +91,11 @@ boolean mostrarMenuAyuda = true;
 // Colores de resaltado al usar algun algoritmo de busqueda
 int colorResaltadoRuta = #17E51F;
 
+/* Variable para saber si se esta coloreando el grafo */
+boolean colorearGrafo = false;
+// Array para detectar 2 teclas al mismo tiempo
+boolean[] keys = new boolean[2];
+
 void setup() {
   size(1024, 576);
   frameRate(60);
@@ -103,6 +114,8 @@ void setup() {
   imgBackground = loadImage("img/background1.png");
   inicializarMatriz(matrizAdyacencia, 0);
   inicializarMatriz(matrizCostos, 0);
+  keys[0] = false;
+  keys[1] = false;
 }
 
 void draw() {
@@ -125,6 +138,7 @@ void mouseClicked() {
   eliminarVertices(matrizAdyacencia, matrizCostos);
   reiniciarRutaMasCorta();
   ejecutarRutaMasCorta(matrizCostos, verticesX.size(), rutaMasCorta);  
+  desactivarColoreadoGrafo();
 }
 
 void mouseReleased() {
@@ -136,7 +150,17 @@ void mouseReleased() {
 void keyPressed() {
   nombrarVertice();
   asignarCostoAristas(matrizCostos);
+  activarColoreadoGrafo();
   ocultarMenuAyuda();
+}
+
+void keyReleased() {
+  if(keyCode == SHIFT) {
+    keys[0] = false;  
+  }
+  if(key == 'z' || key == 'Z') {
+    keys[1] = false;  
+  }
 }
 
 /************************************
@@ -149,17 +173,18 @@ void imprimirVertices() {
   // Se recorre el arrayList y se imprime un ellipse en las coordenadas que tenga esa posicion del arrayList
   for (int i = 0; i < verticesX.size(); i++) {
     strokeWeight(grosorBordeVertice);
-    stroke(bordeVertice);         
     
-    resaltarVertices(i);
-
+    if(colorearGrafo) {
+      stroke(coloresVert[i]);  
+    }
+    else {
+      stroke(bordeVertice);
+      resaltarVertices(i);
+    }    
+    
     fill(rellenoVertice);    
-    /*
-    fill(rellenoVertice);    
-    strokeWeight(grosorBordeVertice);
-    stroke(bordeVertice);
-    */
     ellipse(verticesX.get(i), verticesY.get(i), widthVertices, widthVertices);
+    
   }
 }
 
@@ -811,6 +836,10 @@ void ejecutarRutaMasCorta(int matrizCostos[][], int cantidadVertices, ArrayList<
       if (keyPressed && keyCode == CONTROL && mouseButton == LEFT) {
         vertice = mouseSobreVertice(0); 
         if (vertice >= 0) {
+          // Se desactiva el coloreado si esta activo
+          if(colorearGrafo) {
+            colorearGrafo = false;  
+          }
           println("Preparando ruta mas corta");
           posVertice1 = vertice;
           preparandoRutaMasCorta = true;
