@@ -13,7 +13,7 @@ boolean validarArbol() {
 }
 
 void activarSeleccionarRaiz() {
-  if(!nombrandoVertice && !asignandoCostoArista && !agregandoArista && !borrandoArista && !preparandoRutaMasCorta) {
+  if(modoArboles && !nombrandoVertice && !asignandoCostoArista && !agregandoArista && !borrandoArista && !preparandoRutaMasCorta) {
     if(key == 'r' || key == 'R') {
       seleccionandoRaiz = true;  
     }  
