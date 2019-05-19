@@ -14,7 +14,7 @@ recargando la ventana.
 
 ## 17/05/19
 **Añadidos:**
-- Se implementó el coloreado de vértices. Esta función puede activarse presionando SHIFT y la tecla 'Z' de nuestro teclado.
+- Se implementó el coloreado de vértices. Esta función puede activarse presionando SHIFT y la tecla 'Z' de nuestro teclado. 
 
 **Screenshots**
 ![](img/screenshots/Screenshot10.png)
