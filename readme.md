@@ -1,4 +1,4 @@
-### Proyecto final de la materia "Matemáticas discretas".
+﻿### Proyecto final de la materia "Matemáticas discretas".
 Si quieres probar este proyecto te recomiendo ampliamente que lo descargues y lo ejecutes con Processing 3, debido a que la version web del enlace de abajo algunas veces no funciona como debería hacerlo.
 
 - Enlace para ver el proyecto: https://shadic78.github.io/Proyecto-Matematicas-Discretas-Grafos/.
@@ -11,12 +11,21 @@ la tecla "BACKSPACE", borrar el nombre del vertice funciona correctamente si eje
 - Muchas veces al querer ver el proyecto utilizando el enlace de arriba solo sale una pantalla gris (No he descubierto el motivo), esto se soluciona
 recargando la ventana.
 
+
+## 17/05/19
+**Añadidos:**
+- Se implementó el coloreado de vértices. Esta función puede activarse presionando SHIFT y la tecla 'Z' de nuestro teclado. 
+
+**Screenshots**
+![](img/screenshots/Screenshot10.png)
+
+
 ## 05/05/19
 
 **Añadidos:**
-- Se implemento el algoritmo de Dijkstra para buscar la ruta mas corta entre dos vertices. Para activar la busqueda de la ruta mas corta se tiene que dar click izquierdo a dos vertices manteniendo presionado la tecla CONTROL.
-- Se agrego que para mostrar la ruta mas corta entre dos vertices los bordes de los vertices y las aristas se resalten con otro color.
-- Se agrego que al querer eliminar una arista o al querer usar la ruta mas corta ahora el primer vertice al que le des click se resaltara con otro color.
+- Se implementó el algoritmo de Dijkstra para buscar la ruta mas corta entre dos vertices. Para activar la busqueda de la ruta mas corta se tiene que dar click izquierdo a dos vertices manteniendo presionado la tecla CONTROL.
+- Se agregó que para mostrar la ruta mas corta entre dos vertices los bordes de los vertices y las aristas se resalten con otro color.
+- Se agregó que al querer eliminar una arista o al querer usar la ruta mas corta ahora el primer vertice al que le des click se resaltara con otro color.
 
 **Correciones:**
 - Se corrigio que antes podias intentar borrar una arista aun si tu grafo solo tenia un vertice, debido a ello el programa se quedaba atorado y tenias que cerrarlo y volver a abrirlo.
