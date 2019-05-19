@@ -118,25 +118,31 @@ void desactivarColoreadoGrafo() {
 }
 
 void activarColoreadoGrafo() {
-  if(keyCode == SHIFT) {
-    keys[0] = true;    
-  }
-  else {
-    if(keys[0]) {
-      if(key == 'z' || key == 'Z') {
-        keys[1] = true;  
-      }
-    }
-  }
-  
-  if(keys[0] && keys[1]) {
-    if(colorearGrafo) {
-      colorearGrafo = false;    
+  if(!modoArboles) {
+      /*
+      Detectar que se presione shift + z
+    */
+    if(keyCode == SHIFT) {
+      keys[0] = true;    
     }
     else {
-      colorearVertices();
-      colorearGrafo = true;
-      existeRuta = false;
-    }    
-  }  
+      if(keys[0]) {
+        if(key == 'z' || key == 'Z') {
+          keys[1] = true;  
+        }
+      }
+    }
+    
+    /* Si se presiono shift + z */
+    if(keys[0] && keys[1]) {
+      if(colorearGrafo) {
+        colorearGrafo = false;    
+      }
+      else {
+        colorearVertices();
+        colorearGrafo = true;
+        existeRuta = false;
+      }    
+    }      
+  }
 }

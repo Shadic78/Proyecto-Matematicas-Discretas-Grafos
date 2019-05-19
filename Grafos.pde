@@ -96,6 +96,9 @@ boolean colorearGrafo = false;
 // Array para detectar 2 teclas al mismo tiempo
 boolean[] keys = new boolean[2];
 
+/* Variables de arboles */
+boolean modoArboles = false;
+
 void setup() {
   size(1024, 576);
   frameRate(60);
@@ -125,6 +128,9 @@ void draw() {
   imprimirNombresVertices();
   imprimirMensajes();
   imprimirMenuAyuda();
+  
+  /* Arboles */
+  imprimirDatosArbol();
 }
 
 void mouseDragged() {
@@ -139,6 +145,9 @@ void mouseClicked() {
   reiniciarRutaMasCorta();
   ejecutarRutaMasCorta(matrizCostos, verticesX.size(), rutaMasCorta);  
   desactivarColoreadoGrafo();
+  
+  /* Arboles */
+  seleccionarRaiz();
 }
 
 void mouseReleased() {
@@ -152,6 +161,9 @@ void keyPressed() {
   asignarCostoAristas(matrizCostos);
   activarColoreadoGrafo();
   ocultarMenuAyuda();
+  cambiarAModoDeArboles();
+  /* Arboles */
+  activarSeleccionarRaiz();
 }
 
 void keyReleased() {
@@ -243,13 +255,13 @@ int getDistanciaEntrePuntos(int x1, int y1, int x2, int y2) {
  se esta agregando una arista.
  */
 void moverVertice() {
-  if (!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista) {
+  if (!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista && !seleccionandoRaiz) {
     // Obtiene la posicion del vertice al que hiciste click
     posVerticeArrastrando = mouseSobreVertice(0);
   }
   // Este if se activa si posVerticeArrastrando es mayor o igual a cero, es decir 
   // si hiciste click sobre un vertice.
-  if (posVerticeArrastrando >= 0 && !nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista) {
+  if (posVerticeArrastrando >= 0 && !nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista && !seleccionandoRaiz) {
     moviendoVertice = true;
     verticesX.set(posVerticeArrastrando, mouseX);
     verticesY.set(posVerticeArrastrando, mouseY);
@@ -262,7 +274,7 @@ void moverVertice() {
  Al activar nombrandoVertice o agregandoArista o moviendoVertice esta funcion se "bloquea", al igual que la de moverVertice()
  */
 void agregarVertices() {
-  if (!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista && !preparandoRutaMasCorta && mouseButton == LEFT && !keyPressed) {
+  if (!moviendoVertice && !nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista && !preparandoRutaMasCorta && !seleccionandoRaiz && mouseButton == LEFT && !keyPressed) {
     if (!(mouseSobreVertice(widthVertices) >= 0)) {
       verticesX.add(mouseX); 
       verticesY.add(mouseY); 
@@ -270,6 +282,8 @@ void agregarVertices() {
       nombreVertice = " ";
       nombresVertices.add("Nombre");
       nombrandoVertice = true;
+      // Variable que esta en Arboles.pde
+      numNodos = getNumNodos();
     }
   }
 }
@@ -312,7 +326,7 @@ void nombrarVertice() {
 */
 void eliminarVertices(int matrizAdyacencia[][], int matrizCostos[][]) {
   int vertice = 0;
-  if (!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice && !asignandoCostoArista && !preparandoRutaMasCorta) {
+  if (!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice && !asignandoCostoArista && !preparandoRutaMasCorta && !seleccionandoRaiz) {
     if (keyPressed && keyCode == SHIFT && mouseButton == LEFT) {
       // Obtener el vertice al que se le hizo click
       vertice = mouseSobreVertice(0); 
@@ -430,32 +444,36 @@ void moverFilasMatriz(int matriz[][], int filasMatriz, int columnasMatriz, int p
  posterior reinicializa las variables de las posiciones de los vertices y desactiva agregandoArista.
  */
 void agregarAristas() {
-  if (mouseButton == RIGHT && !keyPressed && !agregandoArista && !borrandoArista && !asignandoCostoArista && !preparandoRutaMasCorta && verticesX.size() > 1) {
+  if (mouseButton == RIGHT && !keyPressed && !agregandoArista && !borrandoArista && !asignandoCostoArista && !preparandoRutaMasCorta && !seleccionandoRaiz && verticesX.size() > 1) {
     int pos = mouseSobreVertice(0);
     if (pos >= 0 && posVertice1 < 0) {
       agregandoArista = true;
       posVertice1 = pos;
-      //mensaje = "Da click en otro vertice para unirlos con una arista";
     }
   } 
   else if (mouseButton == RIGHT && agregandoArista) {
     int pos = mouseSobreVertice(0);
     if (pos >= 0 && pos != posVertice1) {
       posVertice2 = pos;
-      // Se asigna que hay una conexion entre los vertices en la matriz de adyacencia
       matrizAdyacencia[posVertice1][posVertice2] = 1;
-      // Se inicializa el peso de la arista a 1
       matrizCostos[posVertice1][posVertice2] = 1;
-      println("Agregado arista: ");
-      println("[" + posVertice1 + "][" + posVertice2 + "]" + " = " + matrizAdyacencia[posVertice1][posVertice2]);
-      //println("[" + posVertice2 + "][" + posVertice1 + "]" + " = " + matrizAdyacencia[posVertice2][posVertice1] + "\n");
-      //posVertice1 = -1;
-      //posVertice2 = -1;
       agregandoArista = false;
-      asignandoCostoArista = true;
-      // Variable que se utiliza para concatenar los valores introducidos por el usuario en la funcion
-      // asignarCostoArista()
-      costoArista = "asignando";
+      // Si se esta en modo de grafos
+      if(!modoArboles) {
+        asignandoCostoArista = true;
+        costoArista = "asignando";  
+      }
+      else {
+        matrizAdyacencia[posVertice2][posVertice1] = 1;
+        matrizCostos[posVertice2][posVertice1] = 1;
+        posVertice1 = -1;
+        posVertice2 = -1;
+        costoArista = "";
+        // Variables que estan en Arboles.pde
+        numHojas = getNumHojas();
+        alturaArbol = getAltura();
+      }
+      
     }
   }
 }
@@ -477,56 +495,63 @@ void imprimirAristas() {
         strokeWeight(2);
         stroke(relleno);        
         if (matrizAdyacencia[i][j] == 1) {
-          
-          /*
-            Si se ejecuto el algoritmo de la ruta mas corta entonces se comprueba si la arista que va 
-            del vertice i al vertice j es parte de la ruta, de ser verdad entonces la variable relleno
-            se le asigna un color verde, si la arista (i, j) no es parte de la ruta mas corta entonces
-            la variable relleno mantiene el color original de las aristas.
-          */
-          if(existeRuta) {
-            for(int m = 0; m < rutaMasCorta.size() - 1; m++) {
-              if(i == rutaMasCorta.get(m) && j == rutaMasCorta.get(m + 1)) {
-                relleno = colorResaltadoRuta;
-                break;
+            /*
+              Si se ejecuto el algoritmo de la ruta mas corta entonces se comprueba si la arista que va 
+              del vertice i al vertice j es parte de la ruta, de ser verdad entonces la variable relleno
+              se le asigna un color verde, si la arista (i, j) no es parte de la ruta mas corta entonces
+              la variable relleno mantiene el color original de las aristas.
+            */
+            if(existeRuta) {
+              for(int m = 0; m < rutaMasCorta.size() - 1; m++) {
+                if((i == rutaMasCorta.get(m) && j == rutaMasCorta.get(m + 1)) || (j == rutaMasCorta.get(m) && i == rutaMasCorta.get(m + 1))) {
+                  relleno = colorResaltadoRuta;
+                  break;
+                }
               }
             }
-          }
-          
-          stroke(relleno);
-          fill(relleno);
-          // Si los vertices estan conectados de los dos lados se imprime una sola flecha con dos puntas
-          if(matrizAdyacencia[j][i] == 1) {
-            // Se imprime una sola vez la flecha, si hay una arista (i, j), (j, i) solo se imprime la arista una vez.
-            // Por ejemplo si hay una arista (0, 1) y otra (1, 0) solo se imprime una flecha con dos puntas una vez al pasar por la casilla (0, 1) de la matriz de adyacencia
-            if(i < j) {
-              dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 5, 5, widthVertices / 2 + grosorBordeVertice, colorArista, relleno, true);
-              /* Se imprime el costo de ir del vertice j al vertice i, se rellena con color arista ya que si (i, j) forma parte de la ruta
-              mas corta entonces solo se colorea de verde el costo de ir de i a j, pero el costo de ir de j a i no se colorea de verde*/
-              fill(colorArista);
-              imprimirMensajeConCirculo(str(matrizCostos[j][i]), verticesX.get(j), verticesY.get(j), verticesX.get(i), verticesY.get(i));
-              // Si (i, j) es parte de la ruta mas corta se colorea de verde, de no serlo se colorea con el color original de las aristas.
-              fill(relleno);
-              imprimirMensajeConCirculo(str(matrizCostos[i][j]), verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));              
-            }
-            // Si dos vertices estan conectados de "ida y vuelta" y i no es menor que j pero (i, j) forma parte de la ruta mas corta entonces
-            // se dibuja una flecha con dos puntas y se colorea el costo de (i, j) con el color de relleno y el costo de (j, i) se colorea con el color por defecto de las aristas
-            else if(relleno == colorResaltadoRuta) {
-              dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 5, 5, widthVertices / 2 + grosorBordeVertice, colorArista, relleno, true); 
-              fill(colorArista);
-              imprimirMensajeConCirculo(str(matrizCostos[j][i]), verticesX.get(j), verticesY.get(j), verticesX.get(i), verticesY.get(i)); 
-              fill(relleno);
-              imprimirMensajeConCirculo(str(matrizCostos[i][j]), verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));              
-            }
-          }
-          // Si dos vertices no estan conectados de "ida y vuelta"
-          else {
-            // Se dibuja una flecha con sola la punta del final y se colorea su costo con el color de relleno actual.
-            dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 0, 5, widthVertices / 2 + grosorBordeVertice, colorArista, relleno, true); 
+          // Si se esta en modo de grafos
+          if(!modoArboles) {
+            stroke(relleno);
             fill(relleno);
-            imprimirMensajeConCirculo(str(matrizCostos[i][j]), verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));            
-          }            
-        }
+            // Si los vertices estan conectados de los dos lados se imprime una sola flecha con dos puntas
+            if(matrizAdyacencia[j][i] == 1) {
+              // Se imprime una sola vez la flecha, si hay una arista (i, j), (j, i) solo se imprime la arista una vez.
+              // Por ejemplo si hay una arista (0, 1) y otra (1, 0) solo se imprime una flecha con dos puntas una vez al pasar por la casilla (0, 1) de la matriz de adyacencia
+              if(i < j) {
+                dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 5, 5, widthVertices / 2 + grosorBordeVertice, colorArista, relleno, true);
+                /* Se imprime el costo de ir del vertice j al vertice i, se rellena con color arista ya que si (i, j) forma parte de la ruta
+                mas corta entonces solo se colorea de verde el costo de ir de i a j, pero el costo de ir de j a i no se colorea de verde*/
+                fill(colorArista);
+                imprimirMensajeConCirculo(str(matrizCostos[j][i]), verticesX.get(j), verticesY.get(j), verticesX.get(i), verticesY.get(i));
+                // Si (i, j) es parte de la ruta mas corta se colorea de verde, de no serlo se colorea con el color original de las aristas.
+                fill(relleno);
+                imprimirMensajeConCirculo(str(matrizCostos[i][j]), verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));              
+              }
+              // Si dos vertices estan conectados de "ida y vuelta" y i no es menor que j pero (i, j) forma parte de la ruta mas corta entonces
+              // se dibuja una flecha con dos puntas y se colorea el costo de (i, j) con el color de relleno y el costo de (j, i) se colorea con el color por defecto de las aristas
+              else if(relleno == colorResaltadoRuta) {
+                dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 5, 5, widthVertices / 2 + grosorBordeVertice, colorArista, relleno, true); 
+                fill(colorArista);
+                imprimirMensajeConCirculo(str(matrizCostos[j][i]), verticesX.get(j), verticesY.get(j), verticesX.get(i), verticesY.get(i)); 
+                fill(relleno);
+                imprimirMensajeConCirculo(str(matrizCostos[i][j]), verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));              
+              }
+            }
+            // Si dos vertices no estan conectados de "ida y vuelta"
+            else {
+              // Se dibuja una flecha con sola la punta del final y se colorea su costo con el color de relleno actual.
+              dibujarFlecha(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j), 0, 5, widthVertices / 2 + grosorBordeVertice, colorArista, relleno, true); 
+              fill(relleno);
+              imprimirMensajeConCirculo(str(matrizCostos[i][j]), verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));            
+            }
+            
+          } // Fin modo de grafos
+          else { // Modo de arboles
+            stroke(relleno);
+            line(verticesX.get(i), verticesY.get(i), verticesX.get(j), verticesY.get(j));  
+          }
+                    
+        } // if matrizAdyacencia[i][j] == 1
         
         if (agregandoArista) {
           // Si se esta agregando una arista se dibuja una linea desde el vertice al que hiciste click
@@ -595,7 +620,7 @@ void dibujarFlecha(float x0, float y0, float x1, float y1, float tamTrianguloIni
  */
 void eliminarAristas(int matrizAdyacencia[][], int matrizCostos[][]) {
   int vertice = 0;
-  if (!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice && !asignandoCostoArista && !preparandoRutaMasCorta && verticesX.size() > 1) {
+  if (!borrandoArista && !moviendoVertice && !agregandoArista && !nombrandoVertice && !asignandoCostoArista && !preparandoRutaMasCorta && !seleccionandoRaiz && verticesX.size() > 1) {
     if (keyPressed && keyCode == SHIFT && mouseButton == RIGHT) {
       vertice = mouseSobreVertice(0); 
       if (vertice >= 0) {
@@ -610,9 +635,13 @@ void eliminarAristas(int matrizAdyacencia[][], int matrizCostos[][]) {
       posVertice2 = vertice;
       // Se elimina la arista de la matriz de adyacencia
       matrizAdyacencia[posVertice1][posVertice2] = 0;
-      
       // Se elimina la arista de la matriz de costos
       matrizCostos[posVertice1][posVertice2] = 0;
+      if(modoArboles) {
+        matrizAdyacencia[posVertice2][posVertice1] = 0;  
+        matrizCostos[posVertice2][posVertice1] = 0;
+      }
+      
       
       println("Eliminado arista: ");
       println("[" + posVertice1 + "][" + posVertice2 + "]" + " = " + matrizAdyacencia[posVertice1][posVertice2]);
@@ -732,7 +761,7 @@ void asignarCostoAristas(int matrizCostos[][]) {
 void imprimirMensajes() {
   int altoCaja = tamTexto + 10;
   int cajaY = height - (tamTexto * 3) - 5;
-  if (!nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista && !preparandoRutaMasCorta && !noHuboRuta && !existeRuta) {
+  if (!nombrandoVertice && !agregandoArista && !borrandoArista && !asignandoCostoArista && !preparandoRutaMasCorta && !noHuboRuta && !existeRuta && !seleccionandoRaiz) {
     //mensaje = "- Agrega vertices dando clic izquierdo con el mouse.\n- Puedes mover de lugar los vertices.\n";
     //mensaje += "- Puedes agregar aristas dando click derecho a dos vertices.\n- Puedes borrar aristas manteniendo pulsado SHIFT y dando click derecho a dos vertices.";
     mensaje = "";
@@ -760,10 +789,13 @@ void imprimirMensajes() {
     mensaje += nombresVertices.get(rutaMasCorta.get(0));
     for(int k = 1; k < rutaMasCorta.size(); k++) {
         mensaje += " -> " + nombresVertices.get(rutaMasCorta.get(k));
-  }
+    }
     mensaje += "\nTiene un costo de: " + costoRuta;
     altoCaja += tamTexto * 2 + 5;
     cajaY = height - altoCaja - 20;
+  }
+  else if(seleccionandoRaiz) {
+    mensaje = "Da clic en el vertice que quieras que sea la raiz del arbol.";  
   }
   
   if(mensaje.length() > 0) {
@@ -867,7 +899,12 @@ void ejecutarRutaMasCorta(int matrizCostos[][], int cantidadVertices, ArrayList<
 
 boolean calcularRutaMasCorta(int matrizCostos[][], int numVertices, int origen, int destino, ArrayList<Integer> ruta) {
   ShortestPath t = new ShortestPath();
-  existeRuta = t.dijkstra(matrizCostos, numVertices, origen, destino, ruta);
+  if(!modoArboles) {
+    existeRuta = t.dijkstra(matrizCostos, numVertices, origen, destino, ruta);  
+  }
+  else {
+    existeRuta = t.dijkstra(matrizAdyacencia, numVertices, origen, destino, ruta);      
+  }
   costoRuta = t.getCostoRuta();
   println("\n\nruta = " + existeRuta);  
   return existeRuta;
@@ -904,6 +941,28 @@ void resaltarVertices(int vertice) {
   if(borrandoArista || preparandoRutaMasCorta || existeRuta) {
     if(vertice == posVertice1 || verificarValorEnLista(rutaMasCorta, vertice)) {
      stroke(colorResaltadoRuta);  
+    }
+  }
+}
+
+/*******
+  CAMBIAR DE GRAFOS A ARBOLES
+*********/
+void cambiarAModoDeArboles() {
+  if(!nombrandoVertice && !asignandoCostoArista && !agregandoArista && !borrandoArista && !preparandoRutaMasCorta && verticesX.size() > 0) {
+    if(key == 'a' && validarArbol()) {
+      if(modoArboles) {
+        modoArboles = false;  
+        raizArbol = -1;
+      }
+      else {
+        colorearGrafo = false;
+        existeRuta = false;
+        noHuboRuta = false;
+        modoArboles = true; 
+        seleccionandoRaiz = true;
+        convertirAGrafoNoDirigido(matrizAdyacencia, matrizCostos);
+      }
     }
   }
 }
