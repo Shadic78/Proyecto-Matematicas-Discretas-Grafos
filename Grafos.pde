@@ -1,5 +1,6 @@
  /*
 	Carlos Chan Gongora
+  Nicolas Canul Ibarra
  */
 /*******************
   ArrayLists para la parte grafica de los grafos
@@ -119,6 +120,8 @@ void setup() {
   inicializarMatriz(matrizCostos, 0);
   keys[0] = false;
   keys[1] = false;
+  
+  //grafoPorDefecto();
 }
 
 void draw() {

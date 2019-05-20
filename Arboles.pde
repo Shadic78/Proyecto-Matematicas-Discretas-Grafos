@@ -13,7 +13,7 @@ boolean validarArbol() {
 }
 
 void activarSeleccionarRaiz() {
-  if(modoArboles && !nombrandoVertice && !asignandoCostoArista && !agregandoArista && !borrandoArista && !preparandoRutaMasCorta) {
+  if(!nombrandoVertice && !asignandoCostoArista && !agregandoArista && !borrandoArista && !preparandoRutaMasCorta) {
     if(key == 'r' || key == 'R') {
       seleccionandoRaiz = true;  
     }  
@@ -25,6 +25,9 @@ void seleccionarRaiz() {
     int raizNueva = mouseSobreVertice(0);
     if(raizNueva >= 0) {
       raizArbol = raizNueva; 
+      numHojas = getNumHojas();
+      alturaArbol = getAltura();
+      numNodos = getNumNodos();
       seleccionandoRaiz = false;
     }
   }
