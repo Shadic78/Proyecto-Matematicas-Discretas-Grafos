@@ -70,12 +70,11 @@ void validarArbol() {
      }
   }
   
-  
   //return true;  /*******  Aqui va el codigo para validar que sea un arbol  *********/
 }
 
 void activarSeleccionarRaiz() {
-  if(modoArboles && !nombrandoVertice && !asignandoCostoArista && !agregandoArista && !borrandoArista && !preparandoRutaMasCorta) {
+  if(!nombrandoVertice && !asignandoCostoArista && !agregandoArista && !borrandoArista && !preparandoRutaMasCorta) {
     if(key == 'r' || key == 'R') {
       seleccionandoRaiz = true;  
     }  
@@ -87,7 +86,11 @@ void seleccionarRaiz() {
     int raizNueva = mouseSobreVertice(0);
     if(raizNueva >= 0) {
       raizArbol = raizNueva; 
+      numHojas = getNumHojas();
+      alturaArbol = getAltura();
+      numNodos = getNumNodos();
       seleccionandoRaiz = false;
+      validarArbol();
     }
   }
 }
@@ -125,7 +128,7 @@ void imprimirDatosArbol() {
     text(hojas, x + 20, y + 20 + tamTexto + 8);
     text(altura, x + 20, y + 20 + tamTexto * 2 + 8 * 2);
     text(raiz, x + 20, y + 20 + tamTexto * 3 + 8 * 3);
-  }//else ***Aquí va un texto que diga 'Este grafo no es un árbol'***
+  }
 }
 
 /************
@@ -160,8 +163,7 @@ int getNumHojas() {
 }
 
 int getAltura() {
-  
-  /*Si existe un árbol, se procede a calcular la altura*/
+   /*Si existe un árbol, se procede a calcular la altura*/
   if(existeArbol){
     
     /*Variables locales*/
@@ -169,12 +171,12 @@ int getAltura() {
     int cont = 0, contaux = 0;
     
     /*Vector para almacenar las distancias de todos los vértices a la raíz*/
-    int[] distancias = new int[25];
+    int[] distancias = new int[50];
   
     /*Todos los vértices que sean adyacentes a la raíz se inicilizan con 1 (están a 1 de distancia de la raíz)*/
     for(int j = 0; j < verticesX.size(); j++){
     
-      if(matrizAdyacencia[0][j] == 1){
+      if(matrizAdyacencia[raizArbol][j] == 1){
       
         distancias[j] = 1;
     
@@ -187,13 +189,15 @@ int getAltura() {
   
     }
     
+    distancias[raizArbol] = -1;
+    
     
     do{
       
       contaux = 0;
       
       /*Si hay ceros en nuestro vector de distancias significa que a algún vértice no le hemos calculado su distancia con respecto a la raíz*/
-      for(int x = 1; x < verticesX.size(); x++){
+      for(int x = 0; x < verticesX.size(); x++){
       
         if(distancias[x] == 0){
         
@@ -207,13 +211,13 @@ int getAltura() {
       if(contaux != 0){
         
         /*Vamos recorriendo nuestro vector de distancias*/
-        for(int i = 1; i < verticesX.size(); i++){
+        for(int i = 0; i < verticesX.size(); i++){
           
           /*El índice 'a' fue inicializado con 1. En la primera iteración solo habrá unos (la distancia de los adyacentes a la raíz)*/    
           if(distancias[i] == a){
             
             /*Procedemos a checar quienes son los adyacentes a los que tienen distancia 1 (los que son adyacente a la raíz)*/
-            for(int z = 1; z < verticesX.size(); z++){
+            for(int z = 0; z < verticesX.size(); z++){
               
               /*A todos los vértices que sean adyacentes al número 1 se les pondrá en su correspondiente posición de distancias un 2 (están a 2 de distancia de la raíz)*/
               if(matrizAdyacencia[i][z] == 1 && distancias[z] == 0){
@@ -221,16 +225,20 @@ int getAltura() {
                 distancias[z] = distancias[i] + 1;
           
                }
+              
+              
             }
             
             /*Las distancias que eran 1 serán borradas puesto que hay vértices más alejados*/
             distancias[i] = -1;
             
           }
+          
+          
         }
         
         /*Checamos si aún quedan vértices con distancia 1 a la raíz, en caso afirmativo se vuelve a repetir el proceso anterior*/
-        for(int i = 1; i < verticesX.size(); i++){
+        for(int i = 0; i < verticesX.size(); i++){
           
           if(distancias[i] == a){
         
@@ -294,5 +302,4 @@ int getAltura() {
  }
 
   return 0;
-
 }

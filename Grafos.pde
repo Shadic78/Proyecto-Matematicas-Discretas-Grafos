@@ -1,19 +1,18 @@
  /*
 	Carlos Chan Gongora
+  Nicolas Canul Ibarra
  */
-/*******************
-  ArrayLists para la parte grafica de los grafos
- *******************/
+
+// Matriz que representa al grafo
+int[][] matrizAdyacencia = new int[50][50];
+// Matriz que almacena los costos de las aristas
+int[][] matrizCostos = new int[50][50];
+
 // ArrayLists que almacenan las coordenadas (x, y) de los vertices
 ArrayList<Integer> verticesX = new ArrayList<Integer>();
 ArrayList<Integer> verticesY = new ArrayList<Integer>();
 // ArrayList que almacena los nombres de los vertices
 ArrayList<String> nombresVertices = new ArrayList<String>();
-
-// Matriz que almacena las conexiones de los vertices
-int[][] matrizAdyacencia = new int[50][50];
-// Matriz que almacena los costos de las aristas
-int[][] matrizCostos = new int[50][50];
 
 //Matriz de adyacencia secundaria para el manejo de los colores de cada vértice
 int[][] adyacencia = new int[50][50];
@@ -119,6 +118,8 @@ void setup() {
   inicializarMatriz(matrizCostos, 0);
   keys[0] = false;
   keys[1] = false;
+  
+  grafoPorDefecto();
 }
 
 void draw() {
@@ -974,7 +975,6 @@ void cambiarAModoDeArboles() {
         modoArboles = true; 
         seleccionandoRaiz = true;
         convertirAGrafoNoDirigido(matrizAdyacencia, matrizCostos);
-        validarArbol();
       }
     }
   }
