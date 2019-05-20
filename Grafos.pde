@@ -282,9 +282,11 @@ void agregarVertices() {
       nombreVertice = " ";
       nombresVertices.add("Nombre");
       nombrandoVertice = true;
+
       
       existeArbol = false;
       
+
       // Variable que esta en Arboles.pde
       numNodos = getNumNodos();
     }
@@ -478,9 +480,13 @@ void agregarAristas() {
         costoArista = "";
         // Variables que estan en Arboles.pde
         numHojas = getNumHojas();
+
         
         validarArbol();
         //alturaArbol = getAltura();
+
+        alturaArbol = getAltura();
+
       }
       
     }
@@ -646,6 +652,11 @@ void eliminarAristas(int matrizAdyacencia[][], int matrizCostos[][]) {
       matrizAdyacencia[posVertice1][posVertice2] = 0;
       // Se elimina la arista de la matriz de costos
       matrizCostos[posVertice1][posVertice2] = 0;
+      if(modoArboles) {
+        matrizAdyacencia[posVertice2][posVertice1] = 0;  
+        matrizCostos[posVertice2][posVertice1] = 0;
+      }
+      
       
       validarArbol();
       
@@ -962,7 +973,11 @@ void resaltarVertices(int vertice) {
 *********/
 void cambiarAModoDeArboles() {
   if(!nombrandoVertice && !asignandoCostoArista && !agregandoArista && !borrandoArista && !preparandoRutaMasCorta && verticesX.size() > 0) {
+
     if(key == 'a' || key == 'A') {
+
+    if(key == 'a' && validarArbol()) {
+
       if(modoArboles) {
         modoArboles = false;  
         raizArbol = -1;
@@ -974,8 +989,15 @@ void cambiarAModoDeArboles() {
         modoArboles = true; 
         seleccionandoRaiz = true;
         convertirAGrafoNoDirigido(matrizAdyacencia, matrizCostos);
+
         validarArbol();
       }
     }
   }
 }
+
+      }
+    }
+  }
+}
+
