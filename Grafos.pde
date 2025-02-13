@@ -123,7 +123,11 @@ void setup() {
 }
 
 void draw() {
-  background(imgBackground);
+  if (imgBackground != null && imgBackground.width > 0) {
+    background(imgBackground);
+  } else {
+    background(colorBackground);
+  }
   imprimirAristas();
   imprimirVertices();
   imprimirNombresVertices();
